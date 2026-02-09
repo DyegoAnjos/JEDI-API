@@ -7,9 +7,10 @@ use Util\ConstantesGenericasUtil;
 
 class jsonUtil
 {
+
     /**
-     * Corrigido para "Json" e transformado em método público comum para
-     * manter consistência com o uso no seu index.php
+     * @return array
+     * @throws \Exception
      */
     public function tratarCorpoRequestJson()
     {
@@ -26,6 +27,10 @@ class jsonUtil
         return [];
     }
 
+    /**
+     * @param $retorno
+     * @return void
+     */
     public function processarArrayParaRetornar($retorno)
     {
         $dados = [];
@@ -40,6 +45,10 @@ class jsonUtil
         $this->retornarJson($dados);
     }
 
+    /**
+     * @param $json
+     * @return void
+     */
     private function retornarJson($json)
     {
         header('Content-Type: application/json');

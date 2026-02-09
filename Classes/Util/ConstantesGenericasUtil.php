@@ -7,9 +7,9 @@ abstract class ConstantesGenericasUtil
     /* REQUESTS */
     public const TIPO_REQUEST = ['GET', 'POST', 'DELETE', 'PUT'];
     public const TIPO_GET = ['SYSTEM_USER']; //Aqui eu adiciono as tabelas que aceitam requisições do tipo GET
-    public const TIPO_POST = ['USUARIOS'];
-    public const TIPO_DELETE = ['USUARIOS'];
-    public const TIPO_PUT = ['USUARIOS'];
+    public const TIPO_POST = [''];
+    public const TIPO_DELETE = [''];
+    public const TIPO_PUT = [''];
 
     /* ERROS */
     public const MSG_ERRO_TIPO_ROTA = 'Rota não permitida!';
@@ -17,9 +17,10 @@ abstract class ConstantesGenericasUtil
     public const MSG_ERRO_GENERICO = 'Algum erro ocorreu na requisição!';
     public const MSG_ERRO_SEM_RETORNO = 'Nenhum registro encontrado!';
     public const MSG_ERRO_NAO_AFETADO = 'Nenhum registro afetado!';
-    public const MSG_ERRO_USER_VAZIO = 'É necessário informar um Token!';
-    public const MSG_ERRO_USER_NAO_AUTORIZADO = 'USER não autorizado!';
-    public const MSG_ERR0_JSON_VAZIO = 'O Corpo da requisição não pode ser vazio!';
+    public const MSG_ERRO_USER_VAZIO = 'É necessário informar um Usuário!';
+    public const MSG_ERRO_USER_NAO_AUTORIZADO = 'Usuário não autorizado!';
+    public const MSG_ERRO_USER_NAO_REGISTRADO = 'Usuário não registrado!';
+    public const MSG_ERRO_JSON_VAZIO = 'O Corpo da requisição não pode ser vazio!';
 
     /* SUCESSO */
     public const MSG_DELETADO_SUCESSO = 'Registro deletado com Sucesso!';

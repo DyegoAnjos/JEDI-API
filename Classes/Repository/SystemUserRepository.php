@@ -6,6 +6,7 @@ use DB\MySQL;
 
 class SystemUserRepository
 {
+    //Classe responsável por executar as requisições ao banco de dados
     private object $MySQL;
     public const TABELA = 'system_user';
 
@@ -13,19 +14,26 @@ class SystemUserRepository
         $this->MySQL = new MySQL();
     }
 
+    /**
+     * @return MySQL|object
+     */
     public function getMySQL()
     {
         return $this->MySQL;
     }
 
-    public function validarAcesso($login, $senha)
+    /**
+     * @param $email
+     * @param $senha
+     * @return mixed|null
+     */
+    public function validarAcesso($email, $senha)
     {
-        // Adicionado espaços na query
+        //Função que executa a validação do user
         $consulta = 'SELECT active FROM ' . self::TABELA . ' WHERE email = :email AND password = :password';
 
-        // Corrigido para usar a instância correta do banco de dados
         $stmt = $this->MySQL->getDb()->prepare($consulta);
-        $stmt->bindParam(':email', $login);
+        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $senha);
         $stmt->execute();
 

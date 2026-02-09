@@ -3,11 +3,13 @@
 use Util\ConstantesGenericasUtil;
 use Util\jsonUtil;
 use Util\RotasUtil;
+use Validator\RequestValidator;
+
 include 'bootstrap.php';
 //Retorna as coisas
 
 try {
-    $validator = new \Validator\RequestValidator(RotasUtil::getRotas());
+    $validator = new RequestValidator(RotasUtil::getRotas());
     $retorno = $validator->processarRequest();
 
     $jsonUtil = new jsonUtil();
