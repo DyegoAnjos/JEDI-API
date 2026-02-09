@@ -5,9 +5,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
 define('HOST', 'localhost'); //Onde o banco de dados está hospedado
-define('BANCO', 'apijedieduca'); //Nome do banco de dados
+define('BANCO', 'jedieduca'); //Nome do banco de dados
 define('USER', 'root'); //Usuário do banco de dados
-define('SENHA', ' '); //Senha do banco de dados
+define('SENHA', ''); //Senha do banco de dados
 
 define('DS', DIRECTORY_SEPARATOR); // Dando um novo nome para o DIRECTORY_SEPARATOR (barra que separa pastas)
 define('DIR_APP', __DIR__ . DS); // Diretório raiz do projeto

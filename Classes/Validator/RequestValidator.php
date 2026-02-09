@@ -21,8 +21,17 @@ class RequestValidator
     public function processarRequest()
     {
         $retorno = null;
-        if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_GET, true)) {
-            $retorno = $this->get();
+        $metodosGet = ['GET']; // Métodos HTTP permitidos
+        $rota = $this->request['rota'];
+
+        // 1. Verifica se o método HTTP é GET
+        if (in_array($this->request['metodo'], $metodosGet, true)) {
+            // 2. Verifica se a ROTA solicitada está permitida nas constantes
+            if (in_array($rota, ConstantesGenericasUtil::TIPO_GET, true)) {
+                $retorno = $this->get();
+            } else {
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
+            }
         }
         return $retorno;
     }
