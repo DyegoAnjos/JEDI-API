@@ -32,7 +32,7 @@ class RequestValidator
         $rota = $this->request['rota'];
         $recurso = $this->request['recurso'];
 
-        if ($rota === 'System_user') {
+        if ($rota === 'SYSTEM_USER') {
             $usuariosService = new SystemUserService($this->request);
             if($recurso === 'validar'){
                 $retorno = $usuariosService->validar();
