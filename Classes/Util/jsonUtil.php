@@ -32,7 +32,8 @@ class jsonUtil
         $dados[ConstantesGenericasUtil::TIPO] = ConstantesGenericasUtil::TIPO_ERRO;
         $dados[ConstantesGenericasUtil::RESPOSTA] = $retorno;
 
-        if ($retorno !== null && $retorno !== false) {
+        // Se o retorno não for nulo, vazio ou falso, é sucesso
+        if ($retorno !== null && $retorno !== false && $retorno !== '') {
             $dados[ConstantesGenericasUtil::TIPO] = ConstantesGenericasUtil::TIPO_SUCESSO;
         }
 

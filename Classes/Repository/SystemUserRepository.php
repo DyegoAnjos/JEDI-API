@@ -18,9 +18,12 @@ class SystemUserRepository
         return $this->MySQL;
     }
 
-    public function validarAcesso($login, $senha) {
+    public function validarAcesso($login, $senha)
+    {
+        // Adicionado espaços na query
         $consulta = 'SELECT active FROM ' . self::TABELA . ' WHERE email = :email AND password = :password';
 
+        // Corrigido para usar a instância correta do banco de dados
         $stmt = $this->MySQL->getDb()->prepare($consulta);
         $stmt->bindParam(':email', $login);
         $stmt->bindParam(':password', $senha);
@@ -28,6 +31,7 @@ class SystemUserRepository
 
         $resultado = $stmt->fetch();
 
+        // Retorna o valor da coluna 'active' ou null se não houver registro
         return $resultado ? $resultado['active'] : null;
     }
 }

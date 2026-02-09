@@ -25,8 +25,8 @@ class SystemUserService
 
             $resultado = $this->SystemUserRepository->validarAcesso($login, $senha);
 
-            if($resultado === 'Y'){
-                return ['mensagem' => 'Acesso permitido'];
+            if ($resultado === 'Y') {
+                return 'Acesso permitido'; // Isso será reconhecido como sucesso pelo novo if do jsonUtil
             }
 
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_AUTORIZADO);

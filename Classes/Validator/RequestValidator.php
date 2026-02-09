@@ -2,7 +2,7 @@
 
 namespace Validator;
 
-use Service\UsuariosService;
+use Service\SystemUserService;
 use Util\ConstantesGenericasUtil;
 use Util\JsonUtil;
 
@@ -32,7 +32,7 @@ class RequestValidator
         $rota = $this->request['rota'];
         $recurso = $this->request['recurso'];
 
-        if ($rota === 'SystemUser') {
+        if ($rota === 'System_user') {
             $usuariosService = new SystemUserService($this->request);
             if($recurso === 'validar'){
                 $retorno = $usuariosService->validar();
