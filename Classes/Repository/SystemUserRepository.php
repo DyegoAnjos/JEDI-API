@@ -24,17 +24,18 @@ class SystemUserRepository
 
     /**
      * @param $email
-     * @param $senha
+     * @param $password
      * @return mixed|null
      */
-    public function validarAcesso($email, $senha)
+    public function validarAcesso($email, $password)
     {
         //Função que executa a validação do user
         $consulta = 'SELECT active FROM ' . self::TABELA . ' WHERE email = :email AND password = :password';
 
+        // Corrigido para usar a instância correta do banco de dados
         $stmt = $this->MySQL->getDb()->prepare($consulta);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $senha);
+        $stmt->bindParam(':password', $password);
         $stmt->execute();
 
         $resultado = $stmt->fetch();

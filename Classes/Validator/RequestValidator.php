@@ -32,8 +32,8 @@ class RequestValidator
         //Verifica se o método do request é um dos métodos permitidos
         if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)) {
             //Verifica se a Rota (Tabela) dessa requisição tem permissão para fazer esse método, para os outros métodos botar os outros ifs
-            if (in_array($rota, ConstantesGenericasUtil::TIPO_GET, true)) {
-                $retorno = $this->get();
+            if (in_array($rota, ConstantesGenericasUtil::TIPO_POST, true)) {
+                $retorno = $this->post();
             } else {
                 throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
             }
@@ -44,9 +44,9 @@ class RequestValidator
     /**
      * @return string
      */
-    private function get()
+    private function post()
     {
-        //Função para executar os métodos GET
+        //Função para executar os métodos post
         $retorno = null;
         $rota = $this->request['rota'];
         $recurso = $this->request['recurso'];

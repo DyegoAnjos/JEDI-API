@@ -2,7 +2,7 @@
 
 namespace Service;
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Repository\SystemUserRepository;
 use Util\ConstantesGenericasUtil;
 
@@ -29,10 +29,10 @@ class SystemUserService
 
         //Pega o email e a senha do request se não define como null
         $email = $this->dados['email'] ?? null;
-        $senha = $this->dados['senha'] ?? null;
+        $password = $this->dados['password'] ?? null;
 
-        if($email && $senha){
-            $resultado = $this->SystemUserRepository->validarAcesso($email, md5($senha));
+        if($email && $password){
+            $resultado = $this->SystemUserRepository->validarAcesso($email, $password);
 
             if ($resultado === 'Y') {
                 return 'Acesso permitido'; // Isso será reconhecido como sucesso pelo novo if do jsonUtil
