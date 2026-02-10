@@ -6,7 +6,7 @@ abstract class ConstantesGenericasUtil
 {
     /* REQUESTS */
     public const TIPO_REQUEST = ['GET', 'POST', 'DELETE', 'PUT'];
-    public const TIPO_GET = ['']; //Aqui eu adiciono as tabelas que aceitam requisições do tipo GET
+    public const TIPO_GET = ['PARTIDASPERGUNTAS']; //Aqui eu adiciono as tabelas que aceitam requisições do tipo GET
     public const TIPO_POST = ['SYSTEM_USER'];
     public const TIPO_DELETE = [''];
     public const TIPO_PUT = [''];
@@ -30,6 +30,11 @@ abstract class ConstantesGenericasUtil
     public const MSG_ERRO_ID_OBRIGATORIO = 'ID é obrigatório!';
     public const MSG_ERRO_LOGIN_EXISTENTE = 'Login já existente!';
     public const MSG_ERRO_LOGIN_SENHA_OBRIGATORIO = 'Login e Senha são obrigatórios!';
+
+    /* RECURSOS RANKING */
+    public const MSG_ERRO_RANKING_SEM_REGISTRO = 'Tema sem registo!';
+
+    public const MSG_ERRO_ID_TEMA_OBRIGATORIO = 'O ID do tema é obrigatório!';
 
     /* RETORNO JSON */
     const TIPO_SUCESSO = 'sucesso';

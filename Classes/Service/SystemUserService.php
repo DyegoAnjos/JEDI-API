@@ -9,7 +9,7 @@ use Util\ConstantesGenericasUtil;
 class SystemUserService
 {
     private array $dados;
-    private object $SystemUserRepository;
+    private $SystemUserRepository;
 
     public function __construct($dados = [])
     {

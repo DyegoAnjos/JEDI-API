@@ -2,6 +2,7 @@
 
 namespace Validator;
 
+use Service\PartidasPerguntasService;
 use Service\SystemUserService;
 use Util\ConstantesGenericasUtil;
 use Util\JsonUtil;
@@ -31,12 +32,25 @@ class RequestValidator
 
         //Verifica se o método do request é um dos métodos permitidos
         if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)) {
-            //Verifica se a Rota (Tabela) dessa requisição tem permissão para fazer esse método, para os outros métodos botar os outros ifs
-            if (in_array($rota, ConstantesGenericasUtil::TIPO_POST, true)) {
-                $retorno = $this->post();
-            } else {
-                throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
+            switch ($this->request['metodo']) {
+                case 'GET':
+                    if (in_array($rota, ConstantesGenericasUtil::TIPO_GET, true)) {
+                        $retorno = $this->get();
+                    }
+                    else {
+                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
+                    }
+                break;
+                case 'POST':
+                    if (in_array($rota, ConstantesGenericasUtil::TIPO_POST, true)) {
+                        $retorno = $this->post();
+                    }
+                    else {
+                        throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
+                    }
+                break;
             }
+            //Verifica se a Rota (Tabela) dessa requisição tem permissão para fazer esse método, para os outros métodos botar os outros ifs
         }
         return $retorno;
     }
@@ -63,6 +77,27 @@ class RequestValidator
 
             case is_null($retorno):
                 throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
+            break;
+        }
+
+        return $retorno;
+    }
+
+    private function get(){
+        $retorno = null;
+        $rota = $this->request['rota'];
+        $recurso = $this->request['recurso'];
+        switch ($rota) {
+            case 'PARTIDASPERGUNTAS':
+                $partidasPerguntasService = new PartidasPerguntasService($this->request);
+
+                if($recurso === 'ranking'){
+                    $retorno = $partidasPerguntasService->ranking();
+                }
+            break;
+
+            case is_null($retorno):
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
             break;
         }
 
