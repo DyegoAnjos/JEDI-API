@@ -20,10 +20,9 @@ class PartidasPerguntasService
     public function ranking()
     {
         $tema = $this->dados['tema'] ?? null;
-        //$usuario = $this->dados['usuario'] ?? null;
-        var_dump($tema);
+        $jogador = $this->dados['jogador'] ?? null;
         if($tema){
-            $resultado = $this->PartidasPerguntasRepository->rankingPorTema($tema,$usuario);
+            $resultado = $this->PartidasPerguntasRepository->rankingPorTema($tema,$jogador);
 
             if(count($resultado) > 0){
                 return $resultado;

@@ -6,14 +6,17 @@ use Util\RotasUtil;
 use Validator\RequestValidator;
 
 include 'bootstrap.php';
-//Retorna as coisas
 
 try {
     $jsonUtil = new jsonUtil();
-    $dadosJson = $jsonUtil->tratarCorpoRequestJson(); // Lê o JSON enviado
 
-    // Pega as rotas e mescla com os dados do JSON
-    $requestData = array_merge(RotasUtil::getRotas(), $dadosJson);
+    $dadosJson = $jsonUtil->tratarCorpoRequestJson();
+
+    $dadosRota = RotasUtil::getRotas();
+
+    $requestData = array_merge($dadosRota, $dadosJson);
+
+
 
     $validator = new RequestValidator($requestData);
     $retorno = $validator->processarRequest();
