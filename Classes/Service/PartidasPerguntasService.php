@@ -19,10 +19,11 @@ class PartidasPerguntasService
 
     public function ranking()
     {
-        $tema = $this->dados['id'] ?? null;
-
+        $tema = $this->dados['tema'] ?? null;
+        //$usuario = $this->dados['usuario'] ?? null;
+        var_dump($tema);
         if($tema){
-            $resultado = $this->PartidasPerguntasRepository->rankingPorTema($tema);
+            $resultado = $this->PartidasPerguntasRepository->rankingPorTema($tema,$usuario);
 
             if(count($resultado) > 0){
                 return $resultado;
