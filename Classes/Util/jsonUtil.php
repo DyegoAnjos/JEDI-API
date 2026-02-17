@@ -34,13 +34,7 @@ class jsonUtil
     public function processarArrayParaRetornar($retorno)
     {
         $dados = [];
-        $dados[ConstantesGenericasUtil::TIPO] = ConstantesGenericasUtil::TIPO_ERRO;
         $dados[ConstantesGenericasUtil::RESPOSTA] = $retorno;
-
-        // Se o retorno não for nulo, vazio ou falso, é sucesso
-        if ($retorno !== null && $retorno !== false && $retorno !== '') {
-            $dados[ConstantesGenericasUtil::TIPO] = ConstantesGenericasUtil::TIPO_SUCESSO;
-        }
 
         $this->retornarJson($dados);
     }

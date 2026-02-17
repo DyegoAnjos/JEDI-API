@@ -27,20 +27,21 @@ class SystemUserRepository
      * @param $password
      * @return mixed|null
      */
-    public function validarAcesso($email, $password)
+    public function repositoryPegarUser($email, $password)
     {
         //Função que executa a validação do user
-        $consulta = 'SELECT active FROM ' . self::TABELA . ' WHERE email = :email AND password = :password';
+        $consulta = 'SELECT id, name, login, email, frontpage_id, active FROM ' . self::TABELA . ' WHERE login = :login AND password = :password';
+
 
         // Corrigido para usar a instância correta do banco de dados
         $stmt = $this->MySQL->getDb()->prepare($consulta);
-        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':login', $email);
         $stmt->bindParam(':password', $password);
         $stmt->execute();
 
-        $resultado = $stmt->fetch();
+        $resultado = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         // Retorna o valor da coluna 'active' ou null se não houver registro
-        return $resultado ? $resultado['active'] : null;
+        return $resultado;
     }
 }

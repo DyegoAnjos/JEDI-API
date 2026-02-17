@@ -70,8 +70,8 @@ class RequestValidator
             case 'SYSTEM_USER':
                 $usuariosService = new SystemUserService($this->request);
                 //Verifica qual ação irá ser feita e manda para a sua função
-                if($recurso === 'validar'){
-                    $retorno = $usuariosService->validar();
+                if($recurso === 'listar'){
+                    $retorno = $usuariosService->servicePegarUser();
                 }
             break;
 
@@ -92,7 +92,7 @@ class RequestValidator
                 $partidasPerguntasService = new PartidasPerguntasService($this->request);
 
                 if($recurso === 'ranking'){
-                    $retorno = $partidasPerguntasService->ranking();
+                    $retorno = $partidasPerguntasService->serviceRanking();
                 }
             break;
 

@@ -17,12 +17,12 @@ class PartidasPerguntasService
         $this->PartidasPerguntasRepository = new PartidasPerguntasRepository();
     }
 
-    public function ranking()
+    public function serviceRanking()
     {
-        $tema = $this->dados['tema'] ?? null;
+        $idPartida = $this->dados['idPartida'] ?? null;
         $jogador = $this->dados['jogador'] ?? null;
-        if($tema){
-            $resultado = $this->PartidasPerguntasRepository->rankingPorTema($tema,$jogador);
+        if($idPartida){
+            $resultado = $this->PartidasPerguntasRepository->repositoriRanking($idPartida, $jogador);
 
             if(count($resultado) > 0){
                 return $resultado;

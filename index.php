@@ -16,8 +16,6 @@ try {
 
     $requestData = array_merge($dadosRota, $dadosJson);
 
-
-
     $validator = new RequestValidator($requestData);
     $retorno = $validator->processarRequest();
 
