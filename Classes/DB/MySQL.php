@@ -56,9 +56,9 @@ class MySQL
                 return ConstantesGenericasUtil::MSG_DELETADO_SUCESSO;
             }
             $this->db->rollBack();
-            throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
         }
-        throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
     }
 
     /**
@@ -77,7 +77,7 @@ class MySQL
                 return $registros;
             }
         }
-        throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
     }
 
     /**
@@ -97,10 +97,10 @@ class MySQL
             if ($totalRegistros === 1) {
                 return $stmt->fetch($this->db::FETCH_ASSOC);
             }
-            throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
         }
 
-        throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_OBRIGATORIO);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_OBRIGATORIO);
     }
 
     /**

@@ -38,15 +38,15 @@ class SystemUserService
                 return $resultado; // Isso será reconhecido como sucesso pelo novo if do jsonUtil
             }
             elseif ($resultado['active'] === 'N') {
-                throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_AUTORIZADO);
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_AUTORIZADO);
             }
 
             else{
-                throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_REGISTRADO);
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_REGISTRADO);
             }
 
         }
 
-        throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_VAZIO);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_VAZIO);
     }
 }

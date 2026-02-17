@@ -46,7 +46,7 @@ class RequestValidator
                         $retorno = $this->post();
                     }
                     else {
-                        throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
+                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
                     }
                 break;
             }
@@ -75,8 +75,16 @@ class RequestValidator
                 }
             break;
 
+            case 'PARTIDASPERGUNTAS':
+                $partidasPerguntasService = new PartidasPerguntasService($this->request);
+
+                if($recurso === 'ranking'){
+                    $retorno = $partidasPerguntasService->serviceRanking();
+                }
+            break;
+
             case is_null($retorno):
-                throw new InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
             break;
         }
 
