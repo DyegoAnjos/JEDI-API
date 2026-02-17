@@ -60,32 +60,29 @@ class RequestValidator
      */
     private function post()
     {
-        //Função para executar os métodos post
         $retorno = null;
         $rota = $this->request['rota'];
         $recurso = $this->request['recurso'];
 
-        //Distribuição para cada Rota
         switch ($rota) {
             case 'SYSTEM_USER':
                 $usuariosService = new SystemUserService($this->request);
-                //Verifica qual ação irá ser feita e manda para a sua função
-                if($recurso === 'listar'){
+                // Altere de 'listar' para 'validar' ou aceite ambos
+                if($recurso === 'validar' || $recurso === 'listar'){
                     $retorno = $usuariosService->servicePegarUser();
                 }
-            break;
+                break;
 
             case 'PARTIDASPERGUNTAS':
                 $partidasPerguntasService = new PartidasPerguntasService($this->request);
-
                 if($recurso === 'ranking'){
                     $retorno = $partidasPerguntasService->serviceRanking();
                 }
-            break;
+                break;
+        }
 
-            case is_null($retorno):
-                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
-            break;
+        if (is_null($retorno)) {
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
         }
 
         return $retorno;

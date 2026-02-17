@@ -2,7 +2,7 @@
 
 namespace Service;
 
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Repository\PartidasPerguntasRepository;
 use Util\ConstantesGenericasUtil;
 
