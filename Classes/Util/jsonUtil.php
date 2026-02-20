@@ -34,7 +34,7 @@ class jsonUtil
     public function processarArrayParaRetornar($retorno)
     {
         $dados = [];
-        $dados[ConstantesGenericasUtil::RESPOSTA] = $retorno;
+        $dados = $retorno;
 
         $this->retornarJson($dados);
     }

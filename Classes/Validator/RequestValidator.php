@@ -3,6 +3,7 @@
 namespace Validator;
 
 use Service\PartidasPerguntasService;
+use Service\Pergunta2Service;
 use Service\SystemUserService;
 use Util\ConstantesGenericasUtil;
 use Util\JsonUtil;
@@ -29,7 +30,6 @@ class RequestValidator
 
         $retorno = null;
         $rota = $this->request['rota'];
-
         //Verifica se o método do request é um dos métodos permitidos
         if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)) {
             switch ($this->request['metodo']) {
@@ -67,18 +67,28 @@ class RequestValidator
         switch ($rota) {
             case 'SYSTEM_USER':
                 $usuariosService = new SystemUserService($this->request);
-                // Altere de 'listar' para 'validar' ou aceite ambos
-                if($recurso === 'validar' || $recurso === 'listar'){
+
+                echo json_encode($usuariosService);
+                if($recurso === 'listar'){
                     $retorno = $usuariosService->servicePegarUser();
                 }
-                break;
+            break;
 
             case 'PARTIDASPERGUNTAS':
                 $partidasPerguntasService = new PartidasPerguntasService($this->request);
                 if($recurso === 'ranking'){
                     $retorno = $partidasPerguntasService->serviceRanking();
                 }
-                break;
+
+                //elseif ($recurso === 'salvarPartida'){}
+            break;
+
+            case 'PERGUNTA2':
+                $pergunta2Service = new Pergunta2Service($this->request);
+                if($recurso === 'sortearPerguntas'){
+                    $retorno = $pergunta2Service->pegarPerguntasService();
+                }
+            break;
         }
 
         if (is_null($retorno)) {
@@ -100,6 +110,8 @@ class RequestValidator
                     $retorno = $partidasPerguntasService->serviceRanking();
                 }
             break;
+
+
 
             case is_null($retorno):
                 throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);

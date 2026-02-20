@@ -27,6 +27,7 @@ class SystemUserService
         Caso o active seja Y ele é permitido.
         */
 
+
         //Pega o login e a senha do request se não define como null
         $login = $this->dados['login'] ?? null;
         $password = $this->dados['password'] ?? null;

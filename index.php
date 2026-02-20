@@ -21,7 +21,11 @@ try {
     $requestData = array_merge($dadosRota, $dadosJson);
 
     $validator = new RequestValidator($requestData);
+
+    echo json_encode($validator);
+
     $retorno = $validator->processarRequest();
+
 
     $jsonUtil->processarArrayParaRetornar($retorno);
 
