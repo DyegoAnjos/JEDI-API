@@ -11,7 +11,7 @@ define('SENHA', 'jediEduca@2025'); //Senha do banco de dados
 
 define('DS', DIRECTORY_SEPARATOR); // Dando um novo nome para o DIRECTORY_SEPARATOR (barra que separa pastas)
 define('DIR_APP', __DIR__ . DS); // Diretório raiz do projeto
-define('DIR_PROJETO', 'JEDI-API'); // Nome da pasta do projeto
+define('DIR_PROJETO', 'api/JEDI-API'); // Nome da pasta do projeto
 
 if (file_exists('autoload.php')) {
     include 'autoload.php';

@@ -30,6 +30,7 @@ class RequestValidator
 
         $retorno = null;
         $rota = $this->request['rota'];
+        echo json_encode($this->request);
         //Verifica se o método do request é um dos métodos permitidos
         if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)) {
             switch ($this->request['metodo']) {
