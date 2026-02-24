@@ -22,31 +22,22 @@ class SystemUserService
      */
     function servicePegarUser()
     {
-        /*Método para a validação do User
-        Passa o Email e a senha pela URL, e verifica se o login e a senha passados,
-        Caso o active seja Y ele é permitido.
-        */
-
-        echo "cheguei na função";
-
-        //Pega o login e a senha do request se não define como null
+        echo "Cheguei na função";
         $login = $this->dados['login'] ?? null;
         $password = $this->dados['password'] ?? null;
 
-        if($login && $password){
+        if ($login && $password) {
             $resultado = $this->SystemUserRepository->repositoryPegarUser($login, $password);
 
-            if ($resultado !== null) {
-                return $resultado; // Isso será reconhecido como sucesso pelo novo if do jsonUtil
-            }
-            elseif ($resultado['active'] === 'N') {
-                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_AUTORIZADO);
-            }
-
-            else{
+            if ($resultado === null) {
                 throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_REGISTRADO);
             }
 
+            if (isset($resultado['active']) && $resultado['active'] === 'N') {
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_AUTORIZADO);
+            }
+
+            return $resultado;
         }
 
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_VAZIO);
