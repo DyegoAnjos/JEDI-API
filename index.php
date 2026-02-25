@@ -1,37 +1,26 @@
 <?php
+// ponto de entrada principal da API
 
-use Util\ConstantesGenericasUtil;
-use Util\jsonUtil;
-use Util\RotasUtil;
-use Validator\RequestValidator;
+// exibiremos erros em ambiente de desenvolvimento, mas o bootstrap já define
+// E_ERROR; ajuste conforme necessário para produção
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-include 'bootstrap.php';
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') exit;
+require_once 'bootstrap.php'; // registra autoload e constantes
 
 try {
-    $jsonUtil = new jsonUtil();
+    // monta o array com método/rota/recurso/id
+    $request = \Util\RotasUtil::getRotas();
 
-    $dadosJson = $jsonUtil->tratarCorpoRequestJson();
+    // valida e processa a requisição
+    $validator = new \Validator\RequestValidator($request);
+    $resultado = $validator->processarRequest();
 
-    $dadosRota = RotasUtil::getRotas();
-
-    $requestData = array_merge($dadosRota, $dadosJson);
-
-    $validator = new RequestValidator($requestData);
-
-    echo json_encode($validator);
-
-    $retorno = $validator->processarRequest();
-
-
-    $jsonUtil->processarArrayParaRetornar($retorno);
-
-} catch (Exception $e) {
-    echo json_encode([
-        ConstantesGenericasUtil::TIPO => ConstantesGenericasUtil::TIPO_ERRO,
-        ConstantesGenericasUtil::RESPOSTA => $e->getMessage()
-    ]);
+    header('Content-Type: application/json');
+    echo json_encode($resultado);
+} catch (\Throwable $e) {
+    // qualquer exceção retorna código 400 com mensagem JSON
+    http_response_code(400);
+    header('Content-Type: application/json');
+    echo json_encode(['erro' => $e->getMessage()]);
 }

@@ -4,7 +4,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-define('HOST', 'http://jedieduca.mysql.dbaas.com.br/'); //Onde o banco de dados está hospedado
+// O nome ou endereço de host do servidor MySQL. NÃO inclua protocolo (http://) ou barras.
+define('HOST', 'jedieduca.mysql.dbaas.com.br'); //onde o banco de dados está hospedado
 define('BANCO', 'jedieduca'); //Nome do banco de dados
 define('USER', 'jedieduca'); //Usuário do banco de dados
 define('SENHA', 'jediEduca@2025'); //Senha do banco de dados

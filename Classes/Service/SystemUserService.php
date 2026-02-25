@@ -1,5 +1,4 @@
 <?php
-
 namespace Service;
 
 use InvalidArgumentException;
@@ -8,7 +7,7 @@ use Util\ConstantesGenericasUtil;
 
 class SystemUserService
 {
-    private array $dados;
+    private $dados;
     private $SystemUserRepository;
 
     public function __construct($dados = [])
@@ -22,7 +21,6 @@ class SystemUserService
      */
     function servicePegarUser()
     {
-        echo "Cheguei na função";
         $login = $this->dados['login'] ?? null;
         $password = $this->dados['password'] ?? null;
 

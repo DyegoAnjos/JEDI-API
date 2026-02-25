@@ -7,7 +7,10 @@ use DB\MySQL;
 class SystemUserRepository
 {
     //Classe responsável por executar as requisições ao banco de dados
-    private object $MySQL;
+    /**
+     * @var \DB\MySQL
+     */
+    private $MySQL;
     public const TABELA = 'system_user';
 
     public function __construct(){

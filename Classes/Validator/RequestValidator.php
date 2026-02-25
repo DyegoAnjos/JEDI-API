@@ -2,11 +2,12 @@
 
 namespace Validator;
 
-use Service\PartidasPerguntasService;
 use Service\Pergunta2Service;
-use Service\SystemUserService;
-use Util\ConstantesGenericasUtil;
 use Util\JsonUtil;
+use Service\SystemUserService;
+use Service\PartidasPerguntasService;
+use Util\ConstantesGenericasUtil;
+use Util\RotasUtil;
 
 class RequestValidator
 {
@@ -18,6 +19,16 @@ class RequestValidator
      */
     public function __construct($request)
     {
+        // se for POST, leia o corpo JSON e mescle com os dados da rota
+        if (isset($request['metodo']) && $request['metodo'] === 'POST') {
+            $jsonUtil = new JsonUtil();
+            $body = $jsonUtil->tratarCorpoRequestJson();
+            if (is_array($body) && count($body) > 0) {
+                // valores do corpo prevalecem em caso de conflito
+                $request = array_merge($request, $body);
+            }
+        }
+
         $this->request = $request;
     }
 
@@ -30,7 +41,6 @@ class RequestValidator
 
         $retorno = null;
         $rota = $this->request['rota'];
-        echo json_encode($this->request);
         //Verifica se o método do request é um dos métodos permitidos
         if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)) {
             switch ($this->request['metodo']) {
@@ -69,7 +79,6 @@ class RequestValidator
             case 'SYSTEM_USER':
                 $usuariosService = new SystemUserService($this->request);
 
-                echo json_encode($usuariosService);
                 if($recurso === 'listar'){
                     $retorno = $usuariosService->servicePegarUser();
                 }

@@ -7,7 +7,10 @@ use Util\ConstantesGenericasUtil;
 
 class Pergunta2Service
 {
-    private array $dados;
+    /**
+     * @var array|null
+     */
+    private $dados;
 
     private $Pergunta2Repository;
 

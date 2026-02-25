@@ -8,7 +8,10 @@ use Util\ConstantesGenericasUtil;
 
 class PartidasPerguntasService
 {
-    private  array $dados;
+    /**
+     * @var array|null
+     */
+    private $dados;
     private $PartidasPerguntasRepository;
 
     public function __construct($dados = [])

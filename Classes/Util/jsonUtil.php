@@ -5,7 +5,7 @@ namespace Util;
 // Garanta que a importação está correta
 use Util\ConstantesGenericasUtil;
 
-class jsonUtil
+class JsonUtil
 {
 
     /**

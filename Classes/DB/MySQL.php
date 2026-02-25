@@ -11,7 +11,10 @@ use Util\ConstantesGenericasUtil;
 
 class MySQL
 {
-    private object $db;
+    /**
+     * @var \PDO|null
+     */
+    private $db;
 
     /**
      * MySQL constructor.
@@ -28,10 +31,17 @@ class MySQL
     public function setDB()
     {
         try {
-            return new PDO(
-                'mysql:host=' . HOST . '; dbname=' . BANCO . ';', USER, SENHA
-            );
+            $dsn = 'mysql:host=' . HOST . ';dbname=' . BANCO . ';charset=utf8';
+            $options = [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_TIMEOUT            => 5, // seconds, evita longos bloqueios
+            ];
+
+            return new PDO($dsn, USER, SENHA, $options);
         } catch (PDOException $exception) {
+            // loga a exceção e propaga para o chamador poder tratar
+            error_log('MySQL connection error: ' . $exception->getMessage());
             throw new PDOException($exception->getMessage());
         }
     }
