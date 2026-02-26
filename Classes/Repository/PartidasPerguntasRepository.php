@@ -94,9 +94,14 @@ class PartidasPerguntasRepository
 
         try {
 
-            if ($id === -1){
-                $sqlGeral = "INSERT INTO " . self::TABELA . "(dtJogo, login, tema, jogador, idade, pontuacao, qtdAcertos, qtdErros, tempoGasto, autoAvaliacao, avaliacaoJogo)
-                        VALUES (:dataHoraInicio, :jogadorEmail, 17, :avatar, :idade,'[value-7]','[value-8]','[value-9]', :tempoGasto, :autoAvalicao,'[value-12]')";
+            if($id === -1){
+                $sqlGeral = "INSERT INTO " . self::TABELA .
+                    " (dtJogo, login, tema,jogador, idade, pontuacao, qtdAcertos, qtdErros, tempoGasto,
+                    autoAvaliacao, avaliacaoJogo, nome)
+                    SELECT :dataHoraInicio, :jogadorEmail, 17, :avatar, :idade, 1000,  
+                    (SELECT COUNT(*) FROM logPerguntas lp JOIN partidasperguntas pp ON pp.idPartida = lp.idPartida WHERE lp.tema = 17 AND lp.respCerta = lp.respDada),
+                    (SELECT COUNT(*) FROM logPerguntas lp JOIN partidasperguntas pp ON pp.idPartida = lp.idPartida WHERE lp.tema = 17 AND lp.respCerta != lp.respDada),
+                    :tempoGasto, :autoAvaliacao, 'NOOB', :nome";
                 $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
                 $stmt->bindParam(':dataHoraInicio', $dataHoraInicio);
                 $stmt->bindParam(':jogadorEmail', $jogadorEmail);
@@ -104,16 +109,28 @@ class PartidasPerguntasRepository
                 $stmt->bindParam(':idade', $idade);
                 $stmt->bindParam(':tempoGasto', $tempoGasto);
                 $stmt->bindParam(':autoAvaliacao', $autoAvaliacao);
+                $stmt->bindParam(':nome', $nome);
                 $stmt->execute();
                 $resultado = $this->MySQL->getDb()->lastInsertId();
             }
 
             else{
-                $sqlGeral = "UPDATE " . self::TABELA .
-                "SET dtJogo= :dataHoraInicio, idPartida= :id, login= :jogadorEmail, jogador= :avatar,idade= :idade, pontuacao='[value-7]',
-                `qtdAcertos`='[value-8]', `qtdErros`='[value-9]',`tempoGasto`= :tempoGasto, autoAvaliacao= :autoAvaliacao,`avaliacaoJogo`='[value-12]'
-                WHERE idPartida = :id";
+                $sqlGeral = "UPDATE " . self::TABELA . " 
+                    SET `dtJogo` = :dataHoraInicio, 
+                        `login` = :jogadorEmail,
+                        `jogador` = :avatar, 
+                        `idade` = :idade, 
+                        `pontuacao` = 150,
+                        `qtdAcertos` = (SELECT COUNT(*) FROM logPerguntas lp WHERE lp.idPartida = :id AND lp.tema = 17 AND lp.respCerta = lp.respDada),
+                        `qtdErros` = (SELECT COUNT(*) FROM logPerguntas lp WHERE lp.idPartida = :id AND lp.tema = 17 AND lp.respCerta != lp.respDada),
+                        `tempoGasto` = :tempoGasto, 
+                        `autoAvaliacao` = :autoAvaliacao,
+                        `avaliacaoJogo` = 'Pro', 
+                        `nome` = :nome 
+                        WHERE `idPartida` = :id";
+
                 $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+
                 $stmt->bindParam(':dataHoraInicio', $dataHoraInicio);
                 $stmt->bindParam(':id', $id);
                 $stmt->bindParam(':jogadorEmail', $jogadorEmail);
@@ -121,8 +138,11 @@ class PartidasPerguntasRepository
                 $stmt->bindParam(':idade', $idade);
                 $stmt->bindParam(':tempoGasto', $tempoGasto);
                 $stmt->bindParam(':autoAvaliacao', $autoAvaliacao);
+                $stmt->bindParam(':nome', $nome);
+
                 $stmt->execute();
-                $resultado = $this->MySQL->getDb()->lastInsertId();
+
+                $resultado = $stmt->rowCount();
             }
 
             return $resultado;

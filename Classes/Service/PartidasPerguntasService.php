@@ -52,6 +52,19 @@ class PartidasPerguntasService
 
         if($id && $jogadorEmail && $dataHoraInicio && $autoAvaliacao && $avatar && $tempoGasto){
             $resultado = $this->PartidasPerguntasRepository->repositoriSalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto);
+
+            if($resultado !== false){
+                $this->dados['id'] = $resultado;
+                $logPerguntas = new LogPerguntasService($this->dados);
+
+                return $resultado;
+            }
+
+            else{
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
+            }
         }
+
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
     }
 }
