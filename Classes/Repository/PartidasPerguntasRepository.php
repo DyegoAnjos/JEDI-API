@@ -81,4 +81,54 @@ class PartidasPerguntasRepository
             throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
         }
     }
+
+    public function repositoriSalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto)
+    {
+        if ($nome === null) {
+            $nome = $jogadorEmail;
+        }
+
+        if ($idade === null) {
+            $idade = 0;
+        }
+
+        try {
+
+            if ($id === -1){
+                $sqlGeral = "INSERT INTO " . self::TABELA . "(dtJogo, login, tema, jogador, idade, pontuacao, qtdAcertos, qtdErros, tempoGasto, autoAvaliacao, avaliacaoJogo)
+                        VALUES (:dataHoraInicio, :jogadorEmail, 17, :avatar, :idade,'[value-7]','[value-8]','[value-9]', :tempoGasto, :autoAvalicao,'[value-12]')";
+                $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+                $stmt->bindParam(':dataHoraInicio', $dataHoraInicio);
+                $stmt->bindParam(':jogadorEmail', $jogadorEmail);
+                $stmt->bindParam(':avatar', $avatar);
+                $stmt->bindParam(':idade', $idade);
+                $stmt->bindParam(':tempoGasto', $tempoGasto);
+                $stmt->bindParam(':autoAvaliacao', $autoAvaliacao);
+                $stmt->execute();
+                $resultado = $this->MySQL->getDb()->lastInsertId();
+            }
+
+            else{
+                $sqlGeral = "UPDATE " . self::TABELA .
+                "SET dtJogo= :dataHoraInicio, idPartida= :id, login= :jogadorEmail, jogador= :avatar,idade= :idade, pontuacao='[value-7]',
+                `qtdAcertos`='[value-8]', `qtdErros`='[value-9]',`tempoGasto`= :tempoGasto, autoAvaliacao= :autoAvaliacao,`avaliacaoJogo`='[value-12]'
+                WHERE idPartida = :id";
+                $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+                $stmt->bindParam(':dataHoraInicio', $dataHoraInicio);
+                $stmt->bindParam(':id', $id);
+                $stmt->bindParam(':jogadorEmail', $jogadorEmail);
+                $stmt->bindParam(':avatar', $avatar);
+                $stmt->bindParam(':idade', $idade);
+                $stmt->bindParam(':tempoGasto', $tempoGasto);
+                $stmt->bindParam(':autoAvaliacao', $autoAvaliacao);
+                $stmt->execute();
+                $resultado = $this->MySQL->getDb()->lastInsertId();
+            }
+
+            return $resultado;
+
+        } catch (\PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+    }
 }

@@ -13,7 +13,6 @@ class RotasUtil
         $request['metodo'] = $_SERVER['REQUEST_METHOD'];
         $request['rota'] = strtoupper($urls[0]);
         $request['recurso'] = $urls[1] ?? null;
-        $request['id'] = $urls[2] ?? null; // Opcional, para outras rotas
         return $request;
     }
 

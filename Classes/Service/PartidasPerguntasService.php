@@ -38,4 +38,20 @@ class PartidasPerguntasService
 
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_TEMA_OBRIGATORIO);
     }
+
+    public function serviceSalvarPartida()
+    {
+        $id = $this->dados['id'] ?? null;
+        $jogadorEmail = $this->dados['jogadorEmail'] ?? null;
+        $dataHoraInicio = $this->dados['dataHoraInicio'] ?? null;
+        $nome = $this->dados['nome'] ?? null;
+        $idade = $this->dados['idade'] ?? null;
+        $autoAvaliacao = $this->dados['autoAvaliacao'] ?? null;
+        $avatar = $this->dados['avatar'] ?? null;
+        $tempoGasto = $this->dados['tempoGasto'] ?? null;
+
+        if($id && $jogadorEmail && $dataHoraInicio && $autoAvaliacao && $avatar && $tempoGasto){
+            $resultado = $this->PartidasPerguntasRepository->repositoriSalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto);
+        }
+    }
 }

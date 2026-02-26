@@ -90,7 +90,9 @@ class RequestValidator
                     $retorno = $partidasPerguntasService->serviceRanking();
                 }
 
-                //elseif ($recurso === 'salvarPartida'){}
+                elseif ($recurso === 'salvarPartida'){
+                    $retorno = $partidasPerguntasService->serviceSalvarPartida();
+                }
             break;
 
             case 'PERGUNTA2':
