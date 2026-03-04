@@ -142,8 +142,10 @@ class PartidasPerguntasRepository
 
                 $stmt->execute();
 
-                $resultado = $stmt->rowCount();
+                $resultado = $id;
             }
+
+
 
             return $resultado;
 

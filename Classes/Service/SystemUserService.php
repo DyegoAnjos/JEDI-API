@@ -22,12 +22,11 @@ class SystemUserService
     function servicePegarUser()
     {
         $login = $this->dados['login'] ?? null;
-        $password = $this->dados['password'] ?? null;
+        $password = md5($this->dados['password'] ?? null);
 
         if ($login && $password) {
             $resultado = $this->SystemUserRepository->repositoryPegarUser($login, $password);
-
-            if ($resultado === null) {
+            if ($resultado === null || $resultado === false) {
                 throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_USER_NAO_REGISTRADO);
             }
 

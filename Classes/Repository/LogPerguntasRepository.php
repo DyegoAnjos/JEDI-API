@@ -27,11 +27,12 @@ class LogPerguntasRepository
             $stmt->execute();
             $respCerta = $stmt->fetch();
 
-            if ($avaliacaoCorreta) {
+            if ($avaliacaoCorreta === true) {
                 $avaliacaoCorreta = $respCerta['respcerta'];
             }
 
-            else {
+            elseif ($avaliacaoCorreta === false) {
+
                 if ($respCerta['respcerta'] === 'FAKE') {
                     $avaliacaoCorreta = 'NÃO FAKE';
                 }
@@ -40,6 +41,8 @@ class LogPerguntasRepository
                     $avaliacaoCorreta = 'FAKE';
                 }
             }
+
+
 
             $sql = "INSERT INTO ".self::TABELA." (dtJogo, idPartida, usuario, idade, tema, jogador, numJogada, pergunta, respCerta, respDada, tempoGasto, posicao)
             VALUES (:dataHoraInicio, :id, :jogadorEmail,:idade,17,:avatar, :jogadaId, :noticiaId,:respCerta, :respDada,:tempoResposta, :posicaoAvatar)";
@@ -52,7 +55,7 @@ class LogPerguntasRepository
             $stmt->bindParam(':jogadaId', $jogadaId);
             $stmt->bindParam(':noticiaId', $noticiaId);
             $stmt->bindParam(':respCerta', $respCerta['respcerta']);
-            $stmt->bindParam(':respDada', $$avaliacaoCorreta);
+            $stmt->bindParam(':respDada', $avaliacaoCorreta);
             $stmt->bindParam(':tempoResposta', $tempoResposta);
             $stmt->bindParam(':posicaoAvatar', $posicaoAvatar);
             $stmt->execute();

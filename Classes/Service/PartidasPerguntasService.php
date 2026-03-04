@@ -50,12 +50,14 @@ class PartidasPerguntasService
         $avatar = $this->dados['avatar'] ?? null;
         $tempoGasto = $this->dados['tempoGasto'] ?? null;
 
+
         if($id && $jogadorEmail && $dataHoraInicio && $autoAvaliacao && $avatar && $tempoGasto){
             $resultado = $this->PartidasPerguntasRepository->repositoriSalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto);
 
             if($resultado !== false){
                 $this->dados['id'] = $resultado;
                 $logPerguntas = new LogPerguntasService($this->dados);
+                $resultadoLogPerguntas = $logPerguntas->inserirLogPerguntasService();
 
                 return $resultado;
             }

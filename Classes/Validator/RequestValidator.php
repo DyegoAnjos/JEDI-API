@@ -79,7 +79,7 @@ class RequestValidator
             case 'SYSTEM_USER':
                 $usuariosService = new SystemUserService($this->request);
 
-                if($recurso === 'listar'){
+                if($recurso === 'autenticar'){
                     $retorno = $usuariosService->servicePegarUser();
                 }
             break;
