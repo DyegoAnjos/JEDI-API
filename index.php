@@ -1,26 +1,54 @@
 <?php
-// ponto de entrada principal da API
+/**
+ * Ponto de entrada principal da API - JEDI-API
+ */
 
-// exibiremos erros em ambiente de desenvolvimento, mas o bootstrap já define
-// E_ERROR; ajuste conforme necessário para produção
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// 1. Configurações de CORS (Permite que o seu Front-end acesse a API)
+$allowedOrigins = [
+    'http://localhost:3000',
+    'https://seu-front-producao.com'
+];
 
-require_once 'bootstrap.php'; // registra autoload e constantes
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowedOrigins, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Vary: Origin");
+} else {
+    // Caso esteja testando em outros ambientes, descomente a linha abaixo:
+    // header("Access-Control-Allow-Origin: *");
+}
+
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Accept, Authorization, X-Requested-With');
+header('Access-Control-Max-Age: 86400');
+header('Content-Type: application/json; charset=utf-8');
+
+// 2. Responder ao Preflight (OPTIONS)
+// O navegador envia isso antes do POST real para verificar permissões
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+// 3. Inicialização do Sistema
+require_once 'bootstrap.php'; // Registra autoload e constantes
 
 try {
-    // monta o array com método/rota/recurso/id
+    // O RotasUtil analisa a URL para saber qual recurso foi pedido
     $request = \Util\RotasUtil::getRotas();
 
-    // valida e processa a requisição
+    // O RequestValidator identifica o Service e passa os dados do POST/JSON
     $validator = new \Validator\RequestValidator($request);
     $resultado = $validator->processarRequest();
 
-    header('Content-Type: application/json');
+    // 4. Retorno do Resultado
+    // O header de JSON já foi enviado no topo do arquivo
     echo json_encode($resultado);
+
 } catch (\Throwable $e) {
-    // qualquer exceção retorna código 400 com mensagem JSON
+    // Captura qualquer erro de banco ou validação e retorna como JSON
     http_response_code(400);
-    header('Content-Type: application/json');
-    echo json_encode(['erro' => $e->getMessage()]);
+    echo json_encode([
+        'erro' => $e->getMessage()
+    ]);
 }

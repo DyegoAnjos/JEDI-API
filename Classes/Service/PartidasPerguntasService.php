@@ -20,6 +20,8 @@ class PartidasPerguntasService
         $this->PartidasPerguntasRepository = new PartidasPerguntasRepository();
     }
 
+
+
     public function serviceRanking()
     {
         $idPartida = $this->dados['idPartida'] ?? null;
