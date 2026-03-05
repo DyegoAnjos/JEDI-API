@@ -22,12 +22,11 @@ class RotasUtil
         $metodo = $_SERVER['REQUEST_METHOD'];
 
         if ($metodo === 'POST' || $metodo === 'PUT') {
-            // Tenta ler o JSON vindo do Frontend
-            $jsonObtido = file_get_contents('php://input');
-            $dadosJson = json_decode($jsonObtido, true);
-
-            // Se o JSON for válido, retorna-o. Caso contrário, usa o $_POST tradicional
-            return (is_array($dadosJson)) ? $dadosJson : $_POST;
+            // ESSENCIAL: Lê o corpo bruto da requisição (JSON do Insomnia)
+            $corpoRaw = file_get_contents('php://input');
+            $dadosJson = json_decode($corpoRaw, true);
+            // Se o JSON for válido, usa ele. Se não, tenta o $_POST tradicional
+            return is_array($dadosJson) ? $dadosJson : $_POST;
         }
 
         return $_GET;

@@ -33,18 +33,6 @@ class LogPerguntasService
         $tempoResposta = $jogadaAInserir['tempoResposta'] ?? null;
         $posicaoAvatar = $jogadaAInserir['posicaoAvatar'] ?? null;
 
-        echo $id . '<br>';
-        echo $jogadorEmail . '<br>';
-        echo $dataHoraInicio . '<br>';
-        echo $nome . '<br>';
-        echo $idade . '<br>';
-        echo $avatar . '<br>';
-        echo $jogadaId . '<br>';
-        echo $noticiaId . '<br>';
-        echo $avaliacaoCorreta . '<br>';
-        echo $tempoResposta . '<br>';
-        echo $posicaoAvatar . '<br>';
-
         if($id !== null && $jogadorEmail !== null && $dataHoraInicio !== null && $nome !== null && $idade !== null && $avatar !== null && $jogadaId !== null && $noticiaId !== null && $avaliacaoCorreta !== null && $tempoResposta !== null && $posicaoAvatar !== null){
             $resultado = $this->logPerguntasRepository->inserirLogPerguntasRepository($id , $jogadorEmail , $dataHoraInicio , $nome , $idade , $avatar , $jogadaId , $noticiaId , $avaliacaoCorreta , $tempoResposta , $posicaoAvatar);
 

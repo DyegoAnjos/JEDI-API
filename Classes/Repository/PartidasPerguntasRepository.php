@@ -82,7 +82,7 @@ class PartidasPerguntasRepository
         }
     }
 
-    public function repositoriSalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto)
+    public function repositorySalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto)
     {
 
         if ($nome === null) {
@@ -111,14 +111,6 @@ class PartidasPerguntasRepository
                 $stmt->bindParam(':nome', $nome);
                 $stmt->execute();
                 $resultado = $this->MySQL->getDb()->lastInsertId();
-//                $sqlGeral = "UPDATE " . self::TABELA . "
-//                SET qtdAcertos = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada = lp.respCerta),
-//                qtdErros = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada != lp.respCerta)
-//                ";
-//                $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
-//                $stmt->bindParam(':id', $resultado);
-//                $stmt->execute();
-
             }
 
             if ($id !== -1){
@@ -159,5 +151,37 @@ class PartidasPerguntasRepository
         } catch (\PDOException $e) {
             throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
         }
+    }
+
+    public function repositoryAtualizarAcertoseErros($id)
+    {
+        $sqlGeral = "(SELECT (p.qtdAcertos / t.total) * 100 FROM partidasperguntas p JOIN (SELECT COUNT(*) as total FROM logperguntas WHERE idPartida = :id) t WHERE p.idPartida = :id)";
+        $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $percentAcertos = $stmt->fetchColumn();
+
+        if ($percentAcertos >= 80.0)
+            $aval = "Proplayer";
+        else if (($percentAcertos >= 60.0) && ($percentAcertos < 80.0))
+            $aval = "Avançado";
+        else if (($percentAcertos >= 40.0) && ($percentAcertos < 60.0))
+            $aval = "Casual";
+        else if (($percentAcertos >= 20.0) && ($percentAcertos < 40.0))
+            $aval = "Iniciante";
+        else if ($percentAcertos < 20.0)
+            $aval = "Noob";
+
+        $sqlGeral = "UPDATE " . self::TABELA . "
+                SET qtdAcertos = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada = lp.respCerta),
+                qtdErros = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada != lp.respCerta),
+                pontuacao = (SELECT (100000 * (p.qtdAcertos / t.total) + (100 * t.total)) AS pontos FROM partidasperguntas p JOIN (SELECT COUNT(*) as total FROM logperguntas WHERE idPartida = :id) t WHERE p.idPartida = :id),
+                avaliacaoJogo = :avaliacao
+                WHERE " . self::TABELA .".idPartida = :id";
+                $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+                $stmt->bindParam(':id', $id);
+                $stmt->bindParam(':avaliacao', $aval);
+                $stmt->execute();
+
     }
 }

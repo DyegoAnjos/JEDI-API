@@ -18,6 +18,8 @@ class Pergunta2Service
 
     public function pegarPerguntasService()
     {
+
+
         // 1. Verifica se a chave 'quantidade' existe no array de dados da classe
         if (!isset($this->dados['quantidade'])) {
             http_response_code(400);
@@ -35,6 +37,7 @@ class Pergunta2Service
         }
 
         // 3. Se passou pelas validações, executa o sorteio
+
         $result = $this->Pergunta2Repository->sortearPerguntas($quantidade);
 
         if ($result !== null) {

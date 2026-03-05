@@ -13,23 +13,16 @@ class RequestValidator
 {
     //Classe responsável por executar os request
     private $request;
+    private $dadosRequest;
 
     /**
      * @param $request
      */
     public function __construct($request)
     {
-        // se for POST, leia o corpo JSON e mescle com os dados da rota
-        if (isset($request['metodo']) && $request['metodo'] === 'POST') {
-            $jsonUtil = new JsonUtil();
-            $body = $jsonUtil->tratarCorpoRequestJson();
-            if (is_array($body) && count($body) > 0) {
-                // valores do corpo prevalecem em caso de conflito
-                $request = array_merge($request, $body);
-            }
-        }
-
         $this->request = $request;
+        // Captura os dados (JSON ou POST) de forma automática e universal
+        $this->dadosRequest = \Util\RotasUtil::getRequest();
     }
 
     /**
@@ -77,7 +70,7 @@ class RequestValidator
 
         switch ($rota) {
             case 'SYSTEM_USER':
-                $usuariosService = new SystemUserService($this->request);
+                $usuariosService = new SystemUserService($this->dadosRequest);
 
                 if($recurso === 'autenticar'){
                     $retorno = $usuariosService->servicePegarUser();
@@ -85,7 +78,7 @@ class RequestValidator
             break;
 
             case 'PARTIDASPERGUNTAS':
-                $partidasPerguntasService = new PartidasPerguntasService($this->request);
+                $partidasPerguntasService = new PartidasPerguntasService($this->dadosRequest);
                 if($recurso === 'ranking'){
                     $retorno = $partidasPerguntasService->serviceRanking();
                 }
@@ -96,7 +89,7 @@ class RequestValidator
             break;
 
             case 'PERGUNTA2':
-                $pergunta2Service = new Pergunta2Service($this->request);
+                $pergunta2Service = new Pergunta2Service($this->dadosRequest);
                 if($recurso === 'sortearPerguntas'){
                     $retorno = $pergunta2Service->pegarPerguntasService();
                 }
