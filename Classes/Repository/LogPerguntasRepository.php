@@ -20,6 +20,7 @@ class LogPerguntasRepository
     }
 
     public function inserirLogPerguntasRepository($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $avatar, $jogadaId, $noticiaId, $avaliacaoCorreta, $tempoResposta, $posicaoAvatar){
+
         try{
             $respCertaSQL = "SELECT pergunta2.respcerta FROM pergunta2 WHERE pergunta2.id = :noticiaId";
             $stmt = $this->MySQL->getDb()->prepare($respCertaSQL);

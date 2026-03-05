@@ -43,6 +43,7 @@ class PartidasPerguntasService
 
     public function serviceSalvarPartida()
     {
+
         $id = $this->dados['id'] ?? null;
         $jogadorEmail = $this->dados['jogadorEmail'] ?? null;
         $dataHoraInicio = $this->dados['dataHoraInicio'] ?? null;
@@ -52,6 +53,15 @@ class PartidasPerguntasService
         $avatar = $this->dados['avatar'] ?? null;
         $tempoGasto = $this->dados['tempoGasto'] ?? null;
 
+        echo json_encode($this->dados);
+        echo $id . "<br>";
+        echo $jogadorEmail. "<br>";
+        echo $dataHoraInicio. "<br>";
+        echo $nome. "<br>";
+        echo $idade. "<br>";
+        echo $autoAvaliacao. "<br>";
+        echo $avatar. "<br>";
+        echo $tempoGasto. "<br>"; exit();
 
         if($id && $jogadorEmail && $dataHoraInicio && $autoAvaliacao && $avatar && $tempoGasto){
             $resultado = $this->PartidasPerguntasRepository->repositoriSalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto);

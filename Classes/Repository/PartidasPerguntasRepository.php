@@ -84,6 +84,7 @@ class PartidasPerguntasRepository
 
     public function repositoriSalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto)
     {
+
         if ($nome === null) {
             $nome = $jogadorEmail;
         }
@@ -96,11 +97,9 @@ class PartidasPerguntasRepository
 
             if($id === -1){
                 $sqlGeral = "INSERT INTO " . self::TABELA .
-                    " (dtJogo, login, tema,jogador, idade, pontuacao, qtdAcertos, qtdErros, tempoGasto,
+                    " (dtJogo, login, tema,jogador, idade, pontuacao, tempoGasto,
                     autoAvaliacao, avaliacaoJogo, nome)
                     SELECT :dataHoraInicio, :jogadorEmail, 17, :avatar, :idade, 1000,  
-                    (SELECT COUNT(*) FROM logPerguntas lp JOIN partidasperguntas pp ON pp.idPartida = lp.idPartida WHERE lp.tema = 17 AND lp.respCerta = lp.respDada),
-                    (SELECT COUNT(*) FROM logPerguntas lp JOIN partidasperguntas pp ON pp.idPartida = lp.idPartida WHERE lp.tema = 17 AND lp.respCerta != lp.respDada),
                     :tempoGasto, :autoAvaliacao, 'NOOB', :nome";
                 $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
                 $stmt->bindParam(':dataHoraInicio', $dataHoraInicio);
@@ -112,9 +111,17 @@ class PartidasPerguntasRepository
                 $stmt->bindParam(':nome', $nome);
                 $stmt->execute();
                 $resultado = $this->MySQL->getDb()->lastInsertId();
+//                $sqlGeral = "UPDATE " . self::TABELA . "
+//                SET qtdAcertos = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada = lp.respCerta),
+//                qtdErros = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada != lp.respCerta)
+//                ";
+//                $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+//                $stmt->bindParam(':id', $resultado);
+//                $stmt->execute();
+
             }
 
-            else{
+            if ($id !== -1){
                 $sqlGeral = "UPDATE " . self::TABELA . " 
                     SET `dtJogo` = :dataHoraInicio, 
                         `login` = :jogadorEmail,
