@@ -2,6 +2,7 @@
 
 namespace Service;
 
+use http\Exception\InvalidArgumentException;
 use Repository\Pergunta2Repository;
 use Util\ConstantesGenericasUtil;
 
@@ -18,33 +19,25 @@ class Pergunta2Service
 
     public function pegarPerguntasService()
     {
+        $quantidade = $this->dados['quantidade'] ?? null;
 
+        if($quantidade !== null){
+            if($quantidade > 0){
+                $resultado = $this->Pergunta2Repository->sortearPerguntas($quantidade);
 
-        // 1. Verifica se a chave 'quantidade' existe no array de dados da classe
-        if (!isset($this->dados['quantidade'])) {
-            http_response_code(400);
-            echo json_encode(['erro' => 'Body inválido. Envie {"quantidade": N}.']);
-            exit;
+                if(count($resultado) !== 0){
+                    return $resultado;
+                }
+
+//                elseif(count($resultado) < $quantidade){
+//                    throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SORTEARPERGUNTAS_QUANTIDADE_REGISTROS . " Quantidade pedida: ". $quantidade . " Quantidade de registros: " . count($resultado));
+//                }
+            }
+
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SORTEARPERGUNTAS_QUANTIDADE . " Quantidade Passada: " . $quantidade);
+
         }
 
-        $quantidade = (int)$this->dados['quantidade'];
-
-        // 2. Valida se a quantidade é maior que zero
-        if ($quantidade <= 0) {
-            http_response_code(400);
-            echo json_encode(['erro' => 'quantidade deve ser maior que zero.']);
-            exit;
-        }
-
-        // 3. Se passou pelas validações, executa o sorteio
-
-        $result = $this->Pergunta2Repository->sortearPerguntas($quantidade);
-
-        if ($result !== null) {
-            return $result;
-        }
-
-        // Caso o repositório não encontre nada
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::SEM_PERGUNTAS);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SORTEARPERGUNTAS_BODY);
     }
 }

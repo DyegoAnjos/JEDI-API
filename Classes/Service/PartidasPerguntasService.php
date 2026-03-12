@@ -26,7 +26,7 @@ class PartidasPerguntasService
     {
         $idPartida = $this->dados['idPartida'] ?? null;
         $jogador = $this->dados['jogador'] ?? null;
-        if($idPartida){
+        if($idPartida !== null){
             $resultado = $this->PartidasPerguntasRepository->repositoriRanking($idPartida, $jogador);
 
             if(count($resultado) > 0){
@@ -38,7 +38,7 @@ class PartidasPerguntasService
             }
         }
 
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_TEMA_OBRIGATORIO);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RANKING_BODY);
     }
 
     public function serviceSalvarPartida()
@@ -53,22 +53,26 @@ class PartidasPerguntasService
         $tempoGasto = $this->dados['tempoGasto'] ?? null;
 
 
-        if($id && $jogadorEmail && $dataHoraInicio && $autoAvaliacao && $avatar && $tempoGasto){
+
+        if($id !== null && $jogadorEmail !== null && $dataHoraInicio !== null && $autoAvaliacao !== null && $avatar !== null && $tempoGasto !== null){
             $resultado = $this->PartidasPerguntasRepository->repositorySalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto);
 
-            if($resultado !== false){
-                $this->dados['id'] = $resultado;
-                $logPerguntas = new LogPerguntasService($this->dados);
-                $resultadoLogPerguntas = $logPerguntas->inserirLogPerguntasService();
-                $this->PartidasPerguntasRepository->repositoryAtualizarAcertoseErros($resultado);
-                return $resultado;
+            if($resultado !== null && $resultado > 0){
+                if ($id !== -1){
+                    $this->dados['id'] = $resultado;
+                    $logPerguntas = new LogPerguntasService($this->dados);
+                    $resultadoLogPerguntas = $logPerguntas->inserirLogPerguntasService();
+                    $this->PartidasPerguntasRepository->repositoryAtualizarAcertoseErros($resultado);
+                }
+
+                return ['id' => $resultado];
             }
 
             else{
-                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SALVARPARTIDA_SEM_REGISTRO . " Id passado: " . $id);
             }
         }
 
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SALVARPARTIDA_BODY);
     }
 }

@@ -37,20 +37,12 @@ class RequestValidator
         //Verifica se o método do request é um dos métodos permitidos
         if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)) {
             switch ($this->request['metodo']) {
-                case 'GET':
-                    if (in_array($rota, ConstantesGenericasUtil::TIPO_GET, true)) {
-                        $retorno = $this->get();
-                    }
-                    else {
-                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
-                    }
-                break;
                 case 'POST':
                     if (in_array($rota, ConstantesGenericasUtil::TIPO_POST, true)) {
                         $retorno = $this->post();
                     }
                     else {
-                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA);
+                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA . " Rota: " . $rota);
                     }
                 break;
             }
@@ -97,30 +89,7 @@ class RequestValidator
         }
 
         if (is_null($retorno)) {
-            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
-        }
-
-        return $retorno;
-    }
-
-    private function get(){
-        $retorno = null;
-        $rota = $this->request['rota'];
-        $recurso = $this->request['recurso'];
-        switch ($rota) {
-            case 'PARTIDASPERGUNTAS':
-                $partidasPerguntasService = new PartidasPerguntasService($this->request);
-
-                if($recurso === 'ranking'){
-                    $retorno = $partidasPerguntasService->serviceRanking();
-                }
-            break;
-
-
-
-            case is_null($retorno):
-                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE);
-            break;
+            throw new \InvalidArgumentException( ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE . " Recurso: " . $recurso);
         }
 
         return $retorno;

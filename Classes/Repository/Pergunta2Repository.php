@@ -4,6 +4,7 @@ namespace Repository;
 
 use DB\MySQL;
 use PDO;
+use PDOException;
 
 class Pergunta2Repository
 {
@@ -24,14 +25,19 @@ class Pergunta2Repository
     public function sortearPerguntas($quantidade)
     {
 
-        $consuta = 'SELECT * FROM ' . self::TABELA .' WHERE fala_proposta IS NOT NULL ORDER BY RAND() LIMIT :quantidade';
+        try{
+            $consuta = 'SELECT * FROM ' . self::TABELA .' WHERE fala_proposta IS NOT NULL ORDER BY RAND() LIMIT :quantidade';
 
-        $stmt = $this->MySQL->getDb()->prepare($consuta);
-        $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
-        $stmt->execute();
+            $stmt = $this->MySQL->getDb()->prepare($consuta);
+            $stmt->bindValue(':quantidade', $quantidade, PDO::PARAM_INT);
+            $stmt->execute();
 
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $result;
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+
     }
 
 }

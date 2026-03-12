@@ -28,7 +28,6 @@ class RotasUtil
             // Se o JSON for válido, usa ele. Se não, tenta o $_POST tradicional
             return is_array($dadosJson) ? $dadosJson : $_POST;
         }
-
         return $_GET;
     }
 

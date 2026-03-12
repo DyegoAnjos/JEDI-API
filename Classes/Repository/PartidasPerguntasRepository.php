@@ -28,7 +28,7 @@ class PartidasPerguntasRepository
         try {
             // 1. Busca o Ranking de TODOS os jogadores (sem LIMIT 10 aqui)
             // Isso garante que a ordenação e os valores sejam consistentes para todos
-            $sqlGeral = "SELECT jogador, MAX(pontuacao) AS pontuacao, 
+            $sqlGeral = "SELECT idPartida,jogador, MAX(pontuacao) AS pontuacao, 
                     (SUM(qtdAcertos)/(SUM(qtdAcertos)+SUM(qtdErros)))*100 AS percentualAcertos, 
                     MIN(tempoGasto) AS tempoGasto, COUNT(*) AS totalPartidas
                     FROM " . self::TABELA . " 
@@ -51,6 +51,7 @@ class PartidasPerguntasRepository
 
                 // Monta o objeto com a posição correta
                 $item = [
+                    "idPartida" => (int) $linha['idPartida'],
                     "jogador" => $linha['jogador'],
                     "pontuacao" => $linha['pontuacao'],
                     "percentualAcertos" => $linha['percentualAcertos'],
@@ -94,13 +95,12 @@ class PartidasPerguntasRepository
         }
 
         try {
-
             if($id === -1){
                 $sqlGeral = "INSERT INTO " . self::TABELA .
                     " (dtJogo, login, tema,jogador, idade, pontuacao, tempoGasto,
                     autoAvaliacao, avaliacaoJogo, nome)
                     SELECT :dataHoraInicio, :jogadorEmail, 17, :avatar, :idade, 1000,  
-                    :tempoGasto, :autoAvaliacao, 'NOOB', :nome";
+                    :tempoGasto, :autoAvaliacao, 'Noob', :nome";
                 $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
                 $stmt->bindParam(':dataHoraInicio', $dataHoraInicio);
                 $stmt->bindParam(':jogadorEmail', $jogadorEmail);
@@ -140,12 +140,14 @@ class PartidasPerguntasRepository
                 $stmt->bindParam(':nome', $nome);
 
                 $stmt->execute();
+                if($stmt->rowCount() <= 0){
+                    $resultado = -1;
+                }
+                else{
+                    return $id;
+                }
 
-                $resultado = $id;
             }
-
-
-
             return $resultado;
 
         } catch (\PDOException $e) {
@@ -155,7 +157,8 @@ class PartidasPerguntasRepository
 
     public function repositoryAtualizarAcertoseErros($id)
     {
-        $sqlGeral = "(SELECT (p.qtdAcertos / t.total) * 100 FROM partidasperguntas p JOIN (SELECT COUNT(*) as total FROM logperguntas WHERE idPartida = :id) t WHERE p.idPartida = :id)";
+
+        $sqlGeral = "(SELECT (p.qtdAcertos / t.total) * 100 FROM partidasPerguntas p JOIN (SELECT COUNT(*) as total FROM logPerguntas WHERE idPartida = :id) t WHERE p.idPartida = :id)";
         $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
@@ -172,12 +175,23 @@ class PartidasPerguntasRepository
         else if ($percentAcertos < 20.0)
             $aval = "Noob";
 
-        $sqlGeral = "UPDATE " . self::TABELA . "
-                SET qtdAcertos = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada = lp.respCerta),
-                qtdErros = (SELECT COUNT(*) FROM logperguntas lp, partidasperguntas pp WHERE pp.idPartida = lp.idPartida AND lp.idPartida = :id AND lp.respDada != lp.respCerta),
-                pontuacao = (SELECT (100000 * (p.qtdAcertos / t.total) + (100 * t.total)) AS pontos FROM partidasperguntas p JOIN (SELECT COUNT(*) as total FROM logperguntas WHERE idPartida = :id) t WHERE p.idPartida = :id),
-                avaliacaoJogo = :avaliacao
-                WHERE " . self::TABELA .".idPartida = :id";
+        $sqlGeral = "UPDATE " . self::TABELA . " 
+                SET 
+                    `qtdAcertos` = (SELECT COUNT(*) FROM logPerguntas WHERE idPartida = :id AND tema = 17 AND respCerta = respDada),
+                    
+                    `qtdErros` = (SELECT COUNT(*) FROM logPerguntas WHERE idPartida = :id AND tema = 17 AND respCerta != respDada),
+                    
+                    `pontuacao` = (
+                        SELECT pontos FROM (
+                            SELECT (100000 * (p2.qtdAcertos / t.total) + (100 * t.total)) AS pontos 
+                            FROM " . self::TABELA . " p2 
+                            JOIN (SELECT COUNT(*) as total FROM logPerguntas WHERE idPartida = :id) t 
+                            WHERE p2.idPartida = :id
+                        ) AS temp
+                    ),
+                    
+                    `avaliacaoJogo` = :avaliacao
+                WHERE idPartida = :id";
                 $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
                 $stmt->bindParam(':id', $id);
                 $stmt->bindParam(':avaliacao', $aval);

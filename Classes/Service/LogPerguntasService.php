@@ -23,7 +23,6 @@ class LogPerguntasService
         $id = $this->dados['id'] ?? null;
         $jogadorEmail = $this->dados['jogadorEmail'] ?? null;
         $dataHoraInicio = $this->dados['dataHoraInicio'] ?? null;
-        $nome = $this->dados['nome'] ?? null;
         $idade = $this->dados['idade'] ?? null;
         $avatar = $this->dados['avatar'] ?? null;
 
@@ -33,14 +32,25 @@ class LogPerguntasService
         $tempoResposta = $jogadaAInserir['tempoResposta'] ?? null;
         $posicaoAvatar = $jogadaAInserir['posicaoAvatar'] ?? null;
 
-        if($id !== null && $jogadorEmail !== null && $dataHoraInicio !== null && $nome !== null && $idade !== null && $avatar !== null && $jogadaId !== null && $noticiaId !== null && $avaliacaoCorreta !== null && $tempoResposta !== null && $posicaoAvatar !== null){
-            $resultado = $this->logPerguntasRepository->inserirLogPerguntasRepository($id , $jogadorEmail , $dataHoraInicio , $nome , $idade , $avatar , $jogadaId , $noticiaId , $avaliacaoCorreta , $tempoResposta , $posicaoAvatar);
+        if($id !== null && $jogadorEmail !== null && $dataHoraInicio !== null && $idade !== null && $avatar !== null && $jogadaId !== null && $noticiaId !== null && $avaliacaoCorreta !== null && $tempoResposta !== null && $posicaoAvatar !== null){
+            $resultado = $this->logPerguntasRepository->inserirLogPerguntasRepository($id , $jogadorEmail , $dataHoraInicio, $idade , $avatar , $jogadaId , $noticiaId , $avaliacaoCorreta , $tempoResposta , $posicaoAvatar);
 
-            return $resultado;
+            if($resultado === -1){
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SALVARJOGADA_PERGUNTA_SEM_REGISTRO . " Id Pergunta: " . $noticiaId);
+            }
+
+            elseif ($resultado !== null){
+                return $resultado;
+            }
+
+            else{
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
+            }
+
+
         }
 
-        else{
-            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
-        }
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SALVARJOGADA_BODY);
+
     }
 }

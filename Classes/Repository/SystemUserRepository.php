@@ -32,19 +32,24 @@ class SystemUserRepository
      */
     public function repositoryPegarUser($email, $password)
     {
-        //Função que executa a validação do user
-        $consulta = 'SELECT id, name, login, email, frontpage_id, active FROM ' . self::TABELA . ' WHERE login = :login AND password = :password';
+        try{
+            //Função que executa a validação do user
+            $consulta = 'SELECT id, name, login, email, frontpage_id, active FROM ' . self::TABELA . ' WHERE login = :login AND password = :password';
 
 
-        // Corrigido para usar a instância correta do banco de dados
-        $stmt = $this->MySQL->getDb()->prepare($consulta);
-        $stmt->bindParam(':login', $email);
-        $stmt->bindParam(':password', $password);
-        $stmt->execute();
+            // Corrigido para usar a instância correta do banco de dados
+            $stmt = $this->MySQL->getDb()->prepare($consulta);
+            $stmt->bindParam(':login', $email);
+            $stmt->bindParam(':password', $password);
+            $stmt->execute();
 
-        $resultado = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        // Retorna o valor da coluna 'active' ou null se não houver registro
-        return $resultado;
+            // Retorna o valor da coluna 'active' ou null se não houver registro
+            return $resultado;
+        }
+        catch (\PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
     }
 }
