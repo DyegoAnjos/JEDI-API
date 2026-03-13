@@ -19,8 +19,34 @@ class PartidasPerguntasService
         $this->dados = $dados;
         $this->PartidasPerguntasRepository = new PartidasPerguntasRepository();
     }
+    public function listarTodasPartidas()
+    {
+            $resultado = $this->PartidasPerguntasRepository->listarTodasPartidasRepository();
 
+            if($resultado !== null){
+                return $resultado;
+            }
 
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
+
+    }
+    public function listarPartida()
+    {
+        $id = $this->dados['id'] ?? null;
+
+        if ($id !== null) {
+            $resultado = $this->PartidasPerguntasRepository->listarPartidasRepository($id);
+
+            if($resultado !== null){
+                return $resultado;
+            }
+
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
+
+        }
+
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_ID);
+    }
 
     public function serviceRanking()
     {

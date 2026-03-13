@@ -2,6 +2,7 @@
 
 namespace Validator;
 
+use Service\LogPerguntasService;
 use Service\Pergunta2Service;
 use Util\JsonUtil;
 use Service\SystemUserService;
@@ -45,9 +46,54 @@ class RequestValidator
                         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA . " Rota: " . $rota);
                     }
                 break;
+                case 'GET':
+                    if (in_array($rota, ConstantesGenericasUtil::TIPO_GET, true)) {
+                        $retorno = $this->get();
+                    }
+                break;
             }
             //Verifica se a Rota (Tabela) dessa requisição tem permissão para fazer esse método, para os outros métodos botar os outros ifs
         }
+        return $retorno;
+    }
+
+    private function get()
+    {
+        $retorno = null;
+        $rota = $this->request['rota'];
+        $recurso = $this->request['recurso'];
+
+        switch ($rota) {
+                case 'PARTIDASPERGUNTAS':
+                    $partidasPerguntasService = new PartidasPerguntasService($this->request);
+                    if($recurso === 'listarPartida'){
+                        $retorno = $partidasPerguntasService->listarPartida();
+                    }
+                    elseif ($recurso === 'listarTodasPartidas'){
+                        $retorno = $partidasPerguntasService->listarTodasPartidas();
+                    }
+                break;
+                case 'LOGPERGUNTAS':
+                    $logperguntas = new LogPerguntasService($this->request);
+                    if($recurso === 'listarLogPergunta'){
+                        $retorno = $logperguntas->listarLogPerguntas();
+                    }
+                break;
+                case "PERGUNTA2":
+                    $pergunta2 = new Pergunta2Service($this->request);
+                    if($recurso === 'listarPergunta'){
+                        $retorno = $pergunta2->listarPergunta();
+                    }
+                    elseif ($recurso === 'listarTodasPerguntas'){
+                        $retorno = $pergunta2->listarTodasPerguntas();
+                    }
+                break;
+        }
+
+        if (is_null($retorno)) {
+            throw new \InvalidArgumentException( ConstantesGenericasUtil::MSG_ERRO_RECURSO_INEXISTENTE . " Recurso: " . $recurso);
+        }
+
         return $retorno;
     }
 

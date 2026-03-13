@@ -22,6 +22,31 @@ class Pergunta2Repository
         return $this->MySQL;
     }
 
+    public function listarTodasPerguntaRepository(){
+        try{
+            $consulta = 'SELECT * FROM '. self::TABELA . ' WHERE fala_proposta IS NOT NULL';
+            $stmt = $this->MySQL->getDb()->prepare($consulta);
+            $stmt->execute();
+
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultado;
+        } catch (PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+    }
+    public function listarPerguntaRepository($id){
+        try{
+            $consulta = 'SELECT * FROM '. self::TABELA . ' WHERE id = :id AND fala_proposta IS NOT NULL';
+            $stmt = $this->MySQL->getDb()->prepare($consulta);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultado;
+        } catch (PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+    }
     public function sortearPerguntas($quantidade)
     {
 

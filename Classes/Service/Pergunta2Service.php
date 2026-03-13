@@ -16,7 +16,33 @@ class Pergunta2Service
         $this->dados = $dados;
         $this->Pergunta2Repository = new Pergunta2Repository();
     }
+    public function listarTodasPerguntas()
+    {
+        $resultado = $this->Pergunta2Repository->listarTodasPerguntaRepository();
 
+        if($resultado !== null){
+            return $resultado;
+        }
+
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
+
+    }
+    public function listarPergunta()
+    {
+        $id = $this->dados['id'] ?? null;
+
+        if ($id !== null) {
+            $resultado = $this->Pergunta2Repository->listarPerguntaRepository($id);
+
+            if($resultado !== null){
+                return $resultado;
+            }
+
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
+        }
+
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_ID);
+    }
     public function pegarPerguntasService()
     {
         $quantidade = $this->dados['quantidade'] ?? null;

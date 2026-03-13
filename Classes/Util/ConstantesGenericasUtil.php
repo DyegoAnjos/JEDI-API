@@ -6,7 +6,7 @@ abstract class ConstantesGenericasUtil
 {
     /* REQUESTS */
     public const TIPO_REQUEST = ['GET', 'POST', 'DELETE', 'PUT'];
-    public const TIPO_GET = ['PARTIDASPERGUNTAS', 'PERGUNTA2']; //Aqui eu adiciono as tabelas que aceitam requisições do tipo GET
+    public const TIPO_GET = ['PARTIDASPERGUNTAS', 'PERGUNTA2', 'LOGPERGUNTAS']; //Aqui eu adiciono as tabelas que aceitam requisições do tipo GET
     public const TIPO_POST = ['SYSTEM_USER', 'PARTIDASPERGUNTAS', 'PERGUNTA2', 'LOGPERGUNTAS'];
     public const TIPO_DELETE = [''];
     public const TIPO_PUT = ['PARTIDASPERGUNTAS', 'LOGPERGUNTAS'];
@@ -52,6 +52,10 @@ abstract class ConstantesGenericasUtil
     public const MSG_ERRO_RANKING_BODY = 'Body inválido. Envie {"idPartida": N} ou {"idPartida": N, "jogador": "jogador"}';
 
     public const MSG_ERRO_ID_TEMA_OBRIGATORIO = 'O ID do tema é obrigatório!';
+
+    /*Listar*/
+    public const MSG_ERRO_LISTAR_TABELA_VAZIA = 'Nenhum registro encontrado!';
+    public const MSG_ERRO_LISTAR_TABELA_ID = 'É necessário passar o id!';
 
     /* RETORNO JSON */
     const TIPO_SUCESSO = 'sucesso';

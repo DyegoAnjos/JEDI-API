@@ -6,7 +6,8 @@
 // 1. Configurações de CORS (Permite que o seu Front-end acesse a API)
 $allowedOrigins = [
     'http://localhost:3000',
-    'https://seu-front-producao.com'
+    'https://seu-front-producao.com',
+    'https://jedieduca.vercel.app'
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -15,7 +16,7 @@ if (in_array($origin, $allowedOrigins, true)) {
     header("Vary: Origin");
 } else {
     // Caso esteja testando em outros ambientes, descomente a linha abaixo:
-    // header("Access-Control-Allow-Origin: *");
+     header("Access-Control-Allow-Origin: *");
 }
 
 header('Access-Control-Allow-Methods: POST, OPTIONS');

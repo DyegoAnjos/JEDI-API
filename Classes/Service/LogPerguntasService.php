@@ -14,7 +14,22 @@ class LogPerguntasService
         $this->dados = $dados;
         $this->logPerguntasRepository = new LogPerguntasRepository();
     }
+    public function listarLogPerguntas()
+    {
+        $id = $this->dados['id'] ?? null;
 
+        if ($id !== null) {
+            $resultado = $this->logPerguntasRepository->listarLogPerguntasRepository($id);
+
+            if($resultado !== null){
+                return $resultado;
+            }
+
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
+        }
+
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_ID);
+    }
     public function inserirLogPerguntasService(){
 
         $jogadaAInserir = $this->dados['jogadas'] ?? null;

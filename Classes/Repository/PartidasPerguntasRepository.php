@@ -22,6 +22,32 @@ class PartidasPerguntasRepository
     {
         return $this->MySQL;
     }
+    public function listarTodasPartidasRepository()
+    {
+        try{
+            $consulta = 'SELECT * FROM '. self::TABELA;
+            $stmt = $this->MySQL->getDb()->prepare($consulta);
+            $stmt->execute();
+
+            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultado;
+        } catch (PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+    }
+    public function listarPartidasRepository($id){
+        try{
+            $consulta = 'SELECT * FROM '. self::TABELA . ' WHERE idPartida = :idPartida';
+            $stmt = $this->MySQL->getDb()->prepare($consulta);
+            $stmt->bindValue(':idPartida', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado;
+        } catch (PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+    }
 
     public function repositoriRanking($idPartida, $jogador)
     {
