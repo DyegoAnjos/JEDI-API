@@ -36,9 +36,12 @@ class Pergunta2Repository
     }
     public function listarPerguntaRepository($id){
         try{
-            $consulta = 'SELECT * FROM '. self::TABELA . ' WHERE id = :id AND fala_proposta IS NOT NULL';
+            if($id !== ""){
+                $id = " WHERE " . $id;
+            }
+
+            $consulta = 'SELECT * FROM '. self::TABELA . $id;
             $stmt = $this->MySQL->getDb()->prepare($consulta);
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
             $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);

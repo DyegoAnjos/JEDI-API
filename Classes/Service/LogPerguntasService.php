@@ -18,7 +18,6 @@ class LogPerguntasService
     {
         $id = $this->dados['id'] ?? null;
 
-        if ($id !== null) {
             $resultado = $this->logPerguntasRepository->listarLogPerguntasRepository($id);
 
             if($resultado !== null){
@@ -26,9 +25,7 @@ class LogPerguntasService
             }
 
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
-        }
 
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_ID);
     }
     public function inserirLogPerguntasService(){
 

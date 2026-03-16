@@ -7,7 +7,8 @@
 $allowedOrigins = [
     'http://localhost:3000',
     'https://seu-front-producao.com',
-    'https://jedieduca.vercel.app'
+    'https://jedieduca.vercel.app',
+    'http://app.jedieduca.com.br/'
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';

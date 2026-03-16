@@ -22,9 +22,12 @@ class LogPerguntasRepository
 
     public function listarLogPerguntasRepository($id){
         try{
-            $consulta = 'SELECT * FROM '. self::TABELA . ' WHERE idPartida = :idPartida';
+            if($id !== ""){
+                $id = " WHERE " . $id;
+            }
+
+            $consulta = 'SELECT * FROM '. self::TABELA . $id;
             $stmt = $this->MySQL->getDb()->prepare($consulta);
-            $stmt->bindValue(':idPartida', $id, PDO::PARAM_INT);
             $stmt->execute();
 
             $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);

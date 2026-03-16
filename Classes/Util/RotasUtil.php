@@ -14,7 +14,11 @@ class RotasUtil
         $request['rota'] = strtoupper($urls[0]);
         $request['recurso'] = $urls[1] ?? null;
         $request['id'] = $urls[2] ?? null;
-
+        $request['id'] = str_replace('&', ' AND ', $request['id']);
+        $request['id'] = str_replace('|', ' OR ', $request['id']);
+        $request['id'] = str_replace('%3E', '>', $request['id']);
+        $request['id'] = str_replace('%3C', '<', $request['id']);
+        $request['id'] = str_replace('%22', '"', $request['id']);
         return $request;
     }
 

@@ -34,7 +34,6 @@ class PartidasPerguntasService
     {
         $id = $this->dados['id'] ?? null;
 
-        if ($id !== null) {
             $resultado = $this->PartidasPerguntasRepository->listarPartidasRepository($id);
 
             if($resultado !== null){
@@ -42,10 +41,6 @@ class PartidasPerguntasService
             }
 
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
-
-        }
-
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_ID);
     }
 
     public function serviceRanking()

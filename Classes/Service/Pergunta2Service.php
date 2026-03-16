@@ -31,17 +31,13 @@ class Pergunta2Service
     {
         $id = $this->dados['id'] ?? null;
 
-        if ($id !== null) {
-            $resultado = $this->Pergunta2Repository->listarPerguntaRepository($id);
+        $resultado = $this->Pergunta2Repository->listarPerguntaRepository($id);
 
-            if($resultado !== null){
-                return $resultado;
-            }
-
-            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
+        if($resultado !== null){
+            return $resultado;
         }
 
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_ID);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
     }
     public function pegarPerguntasService()
     {
