@@ -11,11 +11,21 @@ abstract class ConstantesGenericasUtil
     public const TIPO_DELETE = [''];
     public const TIPO_PUT = ['PARTIDASPERGUNTAS', 'LOGPERGUNTAS'];
 
-    /* ERROS */
-    public const MSG_ERRO_TIPO_ROTA = 'Rota não permitida!';
+    /* ERROS MÉTODO */
+    public const MSG_ERRO_METODO = 'Método HTTP não permitida!';
+    public const MSG_ERRO_METODO_SEM_ROTA = 'Método HTTP sem rota!';
+
+    /* ERROS ROTA*/
+    public const MSG_ERRO_TIPO_ROTA = 'A rota não tem permissão para fazer esse Método HTTP!';
+    public const MSG_ERRO_ROTA_VAZIA = 'A requisição precisa de uma rota!';
+
+    /* ERROS RECURSO */
     public const MSG_ERRO_RECURSO_INEXISTENTE = 'Recurso inexistente!';
+
+    /* ERROS PADRÃO */
     public const MSG_ERRO_GENERICO = 'Algum erro ocorreu na requisição!';
     public const MSG_ERRO_SEM_RETORNO = 'Nenhum registro encontrado!';
+
     public const MSG_ERRO_NAO_AFETADO = 'Nenhum registro afetado!';
     public const MSG_ERRO_USER_BODY = 'Body inválido. Envie {"login": "login", "password": "senha"}.';
     public const MSG_ERRO_USER_NAO_ATIVO = 'Usuário não ativo!';

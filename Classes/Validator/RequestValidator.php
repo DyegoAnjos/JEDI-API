@@ -14,16 +14,16 @@ class RequestValidator
 {
     //Classe responsável por executar os request
     private $request;
-    private $dadosRequest;
+    private $corpoRequest;
 
     /**
      * @param $request
      */
     public function __construct($request)
     {
+
         $this->request = $request;
-        // Captura os dados (JSON ou POST) de forma automática e universal
-        $this->dadosRequest = \Util\RotasUtil::getRequest();
+        $this->corpoRequest = \Util\RotasUtil::getRequest();
     }
 
     /**
@@ -32,9 +32,13 @@ class RequestValidator
     public function processarRequest()
     {
         //Função que própriamente processar o Request enviado
-
         $retorno = null;
+
         $rota = $this->request['rota'];
+        if ($rota == null){
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ROTA_VAZIA);
+        }
+
         //Verifica se o método do request é um dos métodos permitidos
         if (in_array($this->request['metodo'], ConstantesGenericasUtil::TIPO_REQUEST, true)) {
             switch ($this->request['metodo']) {
@@ -43,20 +47,31 @@ class RequestValidator
                         $retorno = $this->post();
                     }
                     else {
-                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA . " Rota: " . $rota);
+                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA . " - Rota: " . $rota . " - Método: " . $this->request['metodo'] );
                     }
                 break;
                 case 'GET':
                     if (in_array($rota, ConstantesGenericasUtil::TIPO_GET, true)) {
                         $retorno = $this->get();
                     }
+                    else{
+                        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_TIPO_ROTA . " - Rota: " . $rota . " - Método: " . $this->request['metodo'] );
+                    }
                 break;
+                default:
+                    throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_METODO_SEM_ROTA . " - Metodo: " . $this->request['metodo']);
             }
-            //Verifica se a Rota (Tabela) dessa requisição tem permissão para fazer esse método, para os outros métodos botar os outros ifs
         }
+        else{
+            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_METODO . " - Método: " . $this->request['metodo']);
+        }
+
         return $retorno;
     }
 
+    /**
+     * @return array|mixed
+     */
     private function get()
     {
         $retorno = null;
@@ -66,26 +81,23 @@ class RequestValidator
         switch ($rota) {
                 case 'PARTIDASPERGUNTAS':
                     $partidasPerguntasService = new PartidasPerguntasService($this->request);
+
                     if($recurso === 'listarPartida'){
                         $retorno = $partidasPerguntasService->listarPartida();
-                    }
-                    elseif ($recurso === 'listarTodasPartidas'){
-                        $retorno = $partidasPerguntasService->listarTodasPartidas();
                     }
                 break;
                 case 'LOGPERGUNTAS':
                     $logperguntas = new LogPerguntasService($this->request);
+
                     if($recurso === 'listarLogPergunta'){
                         $retorno = $logperguntas->listarLogPerguntas();
                     }
                 break;
                 case "PERGUNTA2":
                     $pergunta2 = new Pergunta2Service($this->request);
+
                     if($recurso === 'listarPergunta'){
                         $retorno = $pergunta2->listarPergunta();
-                    }
-                    elseif ($recurso === 'listarTodasPerguntas'){
-                        $retorno = $pergunta2->listarTodasPerguntas();
                     }
                 break;
         }
@@ -108,7 +120,7 @@ class RequestValidator
 
         switch ($rota) {
             case 'SYSTEM_USER':
-                $usuariosService = new SystemUserService($this->dadosRequest);
+                $usuariosService = new SystemUserService($this->corpoRequest);
 
                 if($recurso === 'autenticar'){
                     $retorno = $usuariosService->servicePegarUser();
@@ -116,7 +128,8 @@ class RequestValidator
             break;
 
             case 'PARTIDASPERGUNTAS':
-                $partidasPerguntasService = new PartidasPerguntasService($this->dadosRequest);
+                $partidasPerguntasService = new PartidasPerguntasService($this->corpoRequest);
+
                 if($recurso === 'ranking'){
                     $retorno = $partidasPerguntasService->serviceRanking();
                 }
@@ -127,7 +140,8 @@ class RequestValidator
             break;
 
             case 'PERGUNTA2':
-                $pergunta2Service = new Pergunta2Service($this->dadosRequest);
+                $pergunta2Service = new Pergunta2Service($this->corpoRequest);
+
                 if($recurso === 'sortearPerguntas'){
                     $retorno = $pergunta2Service->pegarPerguntasService();
                 }

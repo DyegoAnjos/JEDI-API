@@ -3,6 +3,7 @@
 namespace Service;
 
 use InvalidArgumentException;
+use Repository\GeneralisRepository;
 use Repository\PartidasPerguntasRepository;
 use Util\ConstantesGenericasUtil;
 
@@ -13,42 +14,36 @@ class PartidasPerguntasService
      */
     private $dados;
     private $PartidasPerguntasRepository;
-
     public function __construct($dados = [])
     {
         $this->dados = $dados;
         $this->PartidasPerguntasRepository = new PartidasPerguntasRepository();
     }
-    public function listarTodasPartidas()
-    {
-            $resultado = $this->PartidasPerguntasRepository->listarTodasPartidasRepository();
 
-            if($resultado !== null){
-                return $resultado;
-            }
-
-            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
-
-    }
+    /**
+     * @return array
+     */
     public function listarPartida()
     {
         $id = $this->dados['id'] ?? null;
 
-            $resultado = $this->PartidasPerguntasRepository->listarPartidasRepository($id);
+        $resultado = GeneralisRepository::listarInstancias($id, "partidasPerguntas");
+        if($resultado !== null){
+            return $resultado;
+        }
 
-            if($resultado !== null){
-                return $resultado;
-            }
-
-            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
     }
 
+    /**
+     * @return array
+     */
     public function serviceRanking()
     {
         $idPartida = $this->dados['idPartida'] ?? null;
-        $jogador = $this->dados['jogador'] ?? null;
+
         if($idPartida !== null){
-            $resultado = $this->PartidasPerguntasRepository->repositoriRanking($idPartida, $jogador);
+            $resultado = $this->PartidasPerguntasRepository->repositoriRanking($idPartida);
 
             if(count($resultado) > 0){
                 return $resultado;
@@ -62,6 +57,9 @@ class PartidasPerguntasService
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RANKING_BODY);
     }
 
+    /**
+     * @return array
+     */
     public function serviceSalvarPartida()
     {
         $id = $this->dados['id'] ?? null;
@@ -73,8 +71,6 @@ class PartidasPerguntasService
         $avatar = $this->dados['avatar'] ?? null;
         $tempoGasto = $this->dados['tempoGasto'] ?? null;
 
-
-
         if($id !== null && $jogadorEmail !== null && $dataHoraInicio !== null && $autoAvaliacao !== null && $avatar !== null && $tempoGasto !== null){
             $resultado = $this->PartidasPerguntasRepository->repositorySalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto);
 
@@ -82,7 +78,7 @@ class PartidasPerguntasService
                 if ($id !== -1){
                     $this->dados['id'] = $resultado;
                     $logPerguntas = new LogPerguntasService($this->dados);
-                    $resultadoLogPerguntas = $logPerguntas->inserirLogPerguntasService();
+                    $logPerguntas->inserirLogPerguntasService();
                     $this->PartidasPerguntasRepository->repositoryAtualizarAcertoseErros($resultado);
                 }
 

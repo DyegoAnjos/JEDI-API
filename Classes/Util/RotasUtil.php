@@ -14,14 +14,15 @@ class RotasUtil
         $request['rota'] = strtoupper($urls[0]);
         $request['recurso'] = $urls[1] ?? null;
         $request['id'] = $urls[2] ?? null;
-        $request['id'] = str_replace('&', ' AND ', $request['id']);
-        $request['id'] = str_replace('|', ' OR ', $request['id']);
-        $request['id'] = str_replace('%3E', '>', $request['id']);
-        $request['id'] = str_replace('%3C', '<', $request['id']);
-        $request['id'] = str_replace('%22', '"', $request['id']);
+
+        $request['id'] = self::converteSimbolos($urls[2] ?? null);
+
         return $request;
     }
 
+    /**
+     * @return array
+     */
     public static function getRequest()
     {
         $metodo = $_SERVER['REQUEST_METHOD'];
@@ -43,5 +44,20 @@ class RotasUtil
         //pera a URI e separa para a URL
         $uri = str_replace('/' . DIR_PROJETO . '/', '', $_SERVER['REQUEST_URI']);
         return explode('/', trim($uri, '/'));
+    }
+
+    /**
+     * @param $url
+     * @return array|string|string[]
+     */
+    private static function converteSimbolos($url)
+    {
+        $url = str_replace('&', ' AND ', $url);
+        $url = str_replace('|', ' OR ', $url);
+        $url = str_replace('%3E', '>', $url);
+        $url = str_replace('%3C', '<', $url);
+        $url = str_replace('%22', '"', $url);
+
+        return $url;
     }
 }

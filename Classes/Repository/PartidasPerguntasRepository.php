@@ -16,47 +16,14 @@ class PartidasPerguntasRepository
     }
 
     /**
-     * @return MySQL
+     * @param $idPartida
+     * @return array
      */
-    public function getMySQL(): MySQL
-    {
-        return $this->MySQL;
-    }
-    public function listarTodasPartidasRepository()
-    {
-        try{
-            $consulta = 'SELECT * FROM '. self::TABELA;
-            $stmt = $this->MySQL->getDb()->prepare($consulta);
-            $stmt->execute();
-
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultado;
-        } catch (PDOException $e) {
-            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
-        }
-    }
-    public function listarPartidasRepository($id){
-        try{
-            if($id !== ""){
-                $id = " WHERE " . $id;
-            }
-
-            $consulta = 'SELECT * FROM '. self::TABELA . $id;
-            $stmt = $this->MySQL->getDb()->prepare($consulta);
-            $stmt->execute();
-
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultado;
-        } catch (PDOException $e) {
-            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
-        }
-    }
-
-    public function repositoriRanking($idPartida, $jogador)
+    public function repositoriRanking($idPartida)
     {
         try {
-            // 1. Busca o Ranking de TODOS os jogadores (sem LIMIT 10 aqui)
-            // Isso garante que a ordenação e os valores sejam consistentes para todos
+            $jogadorAtual = null;
+
             $sqlGeral = "SELECT idPartida, jogador, ". self::TABELA .". nome, MAX(pontuacao) AS pontuacao, 
                     (SUM(qtdAcertos)/(SUM(qtdAcertos)+SUM(qtdErros)))*100 AS percentualAcertos, 
                     MIN(tempoGasto) AS tempoGasto, COUNT(*) AS totalPartidas
@@ -74,12 +41,11 @@ class PartidasPerguntasRepository
             $rankingCompleto = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
             $top10 = [];
+
             // 2. Numerar TODOS e separar o que precisamos
             foreach ($rankingCompleto as $index => $linha) {
                 $posicaoAtual = (int)($index + 1);
-
-
-                    // Monta o objeto com a posição correta
+                // Monta o objeto com a posição correta
                 $item = [
                     "idPartida" => (int) $linha['idPartida'],
                     "nome" => $linha['nome'],
@@ -93,11 +59,13 @@ class PartidasPerguntasRepository
 
                 if($item['idPartida'] == $idPartida){
                     $jogadorAtual = $item;
+
                     $sqlGeral = "SELECT autoAvaliacao, avaliacaoJogo FROM " . self::TABELA . " WHERE idPartida = :idPartida";
                     $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
                     $stmt->bindValue(':idPartida', $idPartida, PDO::PARAM_INT);
                     $stmt->execute();
                     $avaliacao = $stmt->fetch(\PDO::FETCH_ASSOC);
+
                     $jogadorAtual['autoAvaliacao'] = $avaliacao['autoAvaliacao'];
                     $jogadorAtual['avaliacaoJogo'] = $avaliacao['avaliacaoJogo'];
                 }
@@ -117,9 +85,19 @@ class PartidasPerguntasRepository
         }
     }
 
+    /**
+     * @param $id
+     * @param $jogadorEmail
+     * @param $dataHoraInicio
+     * @param $nome
+     * @param $idade
+     * @param $autoAvaliacao
+     * @param $avatar
+     * @param $tempoGasto
+     * @return false|int|mixed|string
+     */
     public function repositorySalvarPartida($id, $jogadorEmail, $dataHoraInicio, $nome, $idade, $autoAvaliacao, $avatar, $tempoGasto)
     {
-
         if ($nome === null) {
             $nome = $jogadorEmail;
         }
@@ -130,11 +108,8 @@ class PartidasPerguntasRepository
 
         try {
             if($id === -1){
-                $sqlGeral = "INSERT INTO " . self::TABELA .
-                    " (dtJogo, login, tema,jogador, idade, pontuacao, tempoGasto,
-                    autoAvaliacao, avaliacaoJogo, nome)
-                    SELECT :dataHoraInicio, :jogadorEmail, 17, :avatar, :idade, 1000,  
-                    :tempoGasto, :autoAvaliacao, 'Noob', :nome";
+                $sqlGeral = "INSERT INTO " . self::TABELA . " (dtJogo, login, tema,jogador, idade, pontuacao, tempoGasto, autoAvaliacao, avaliacaoJogo, nome)
+                    SELECT :dataHoraInicio, :jogadorEmail, 17, :avatar, :idade, -1, :tempoGasto, :autoAvaliacao, 'Noob', :nome";
                 $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
                 $stmt->bindParam(':dataHoraInicio', $dataHoraInicio);
                 $stmt->bindParam(':jogadorEmail', $jogadorEmail);
@@ -144,6 +119,7 @@ class PartidasPerguntasRepository
                 $stmt->bindParam(':autoAvaliacao', $autoAvaliacao);
                 $stmt->bindParam(':nome', $nome);
                 $stmt->execute();
+
                 $resultado = $this->MySQL->getDb()->lastInsertId();
             }
 
@@ -172,8 +148,8 @@ class PartidasPerguntasRepository
                 $stmt->bindParam(':tempoGasto', $tempoGasto);
                 $stmt->bindParam(':autoAvaliacao', $autoAvaliacao);
                 $stmt->bindParam(':nome', $nome);
-
                 $stmt->execute();
+
                 if($stmt->rowCount() <= 0){
                     $resultado = -1;
                 }
@@ -189,9 +165,12 @@ class PartidasPerguntasRepository
         }
     }
 
+    /**
+     * @param $id
+     * @return void
+     */
     public function repositoryAtualizarAcertoseErros($id)
     {
-
         $sqlGeral = "(SELECT (p.qtdAcertos / t.total) * 100 FROM partidasPerguntas p JOIN (SELECT COUNT(*) as total FROM logPerguntas WHERE idPartida = :id) t WHERE p.idPartida = :id)";
         $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
         $stmt->bindParam(':id', $id);
@@ -226,10 +205,9 @@ class PartidasPerguntasRepository
                     
                     `avaliacaoJogo` = :avaliacao
                 WHERE idPartida = :id";
-                $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
-                $stmt->bindParam(':id', $id);
-                $stmt->bindParam(':avaliacao', $aval);
-                $stmt->execute();
-
+        $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':avaliacao', $aval);
+        $stmt->execute();
     }
 }
