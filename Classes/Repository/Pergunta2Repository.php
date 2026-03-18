@@ -34,22 +34,6 @@ class Pergunta2Repository
             throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
         }
     }
-    public function listarPerguntaRepository($id){
-        try{
-            if($id !== ""){
-                $id = " WHERE " . $id;
-            }
-
-            $consulta = 'SELECT * FROM '. self::TABELA . $id;
-            $stmt = $this->MySQL->getDb()->prepare($consulta);
-            $stmt->execute();
-
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultado;
-        } catch (PDOException $e) {
-            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
-        }
-    }
     public function sortearPerguntas($quantidade)
     {
 

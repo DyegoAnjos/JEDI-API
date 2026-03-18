@@ -43,10 +43,7 @@ class SystemUserRepository
             $stmt->bindParam(':password', $password);
             $stmt->execute();
 
-            $resultado = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-            // Retorna o valor da coluna 'active' ou null se não houver registro
-            return $resultado;
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
         catch (\PDOException $e) {
             throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());

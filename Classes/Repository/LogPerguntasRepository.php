@@ -19,23 +19,6 @@ class LogPerguntasRepository
     {
         return $this->MySQL;
     }
-
-    public function listarLogPerguntasRepository($id){
-        try{
-            if($id !== ""){
-                $id = " WHERE " . $id;
-            }
-
-            $consulta = 'SELECT * FROM '. self::TABELA . $id;
-            $stmt = $this->MySQL->getDb()->prepare($consulta);
-            $stmt->execute();
-
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultado;
-        } catch (PDOException $e) {
-            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
-        }
-    }
     public function inserirLogPerguntasRepository($id, $jogadorEmail, $dataHoraInicio, $idade, $avatar, $jogadaId, $noticiaId, $avaliacaoCorreta, $tempoResposta, $posicaoAvatar){
         $resultado = -1;
         try{

@@ -2,6 +2,7 @@
 
 namespace Service;
 
+use Repository\GeneralisRepository;
 use Repository\LogPerguntasRepository;
 use Util\ConstantesGenericasUtil;
 
@@ -18,7 +19,7 @@ class LogPerguntasService
     {
         $id = $this->dados['id'] ?? null;
 
-            $resultado = $this->logPerguntasRepository->listarLogPerguntasRepository($id);
+            $resultado = GeneralisRepository::listarInstancias($id, "logPerguntas");
 
             if($resultado !== null){
                 return $resultado;

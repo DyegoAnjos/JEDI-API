@@ -3,6 +3,7 @@
 namespace Service;
 
 use http\Exception\InvalidArgumentException;
+use Repository\GeneralisRepository;
 use Repository\Pergunta2Repository;
 use Util\ConstantesGenericasUtil;
 
@@ -16,22 +17,12 @@ class Pergunta2Service
         $this->dados = $dados;
         $this->Pergunta2Repository = new Pergunta2Repository();
     }
-    public function listarTodasPerguntas()
-    {
-        $resultado = $this->Pergunta2Repository->listarTodasPerguntaRepository();
 
-        if($resultado !== null){
-            return $resultado;
-        }
-
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_LISTAR_TABELA_VAZIA);
-
-    }
     public function listarPergunta()
     {
         $id = $this->dados['id'] ?? null;
 
-        $resultado = $this->Pergunta2Repository->listarPerguntaRepository($id);
+        $resultado = GeneralisRepository::listarInstancias($id, "pergunta2");
 
         if($resultado !== null){
             return $resultado;
