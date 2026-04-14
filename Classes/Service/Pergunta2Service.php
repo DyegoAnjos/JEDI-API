@@ -33,18 +33,15 @@ class Pergunta2Service
     public function pegarPerguntasService()
     {
         $quantidade = $this->dados['quantidade'] ?? null;
+        $categoria = $this->dados['categoria'] ?? null;
 
         if($quantidade !== null){
             if($quantidade > 0){
-                $resultado = $this->Pergunta2Repository->sortearPerguntas($quantidade);
+                $resultado = $this->Pergunta2Repository->sortearPerguntas($quantidade, $categoria);
 
                 if(count($resultado) !== 0){
                     return $resultado;
                 }
-
-//                elseif(count($resultado) < $quantidade){
-//                    throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SORTEARPERGUNTAS_QUANTIDADE_REGISTROS . " Quantidade pedida: ". $quantidade . " Quantidade de registros: " . count($resultado));
-//                }
             }
 
             throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SORTEARPERGUNTAS_QUANTIDADE . " Quantidade Passada: " . $quantidade);

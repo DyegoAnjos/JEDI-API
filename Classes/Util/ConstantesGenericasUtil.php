@@ -6,7 +6,7 @@ abstract class ConstantesGenericasUtil
 {
     /* REQUESTS */
     public const TIPO_REQUEST = ['GET', 'POST', 'DELETE', 'PUT'];
-    public const TIPO_GET = ['PARTIDASPERGUNTAS', 'PERGUNTA2', 'LOGPERGUNTAS']; //Aqui eu adiciono as tabelas que aceitam requisições do tipo GET
+    public const TIPO_GET = ['PARTIDASPERGUNTAS', 'PERGUNTA2', 'LOGPERGUNTAS', 'CATEGORIA']; //Aqui eu adiciono as tabelas que aceitam requisições do tipo GET
     public const TIPO_POST = ['SYSTEM_USER', 'PARTIDASPERGUNTAS', 'PERGUNTA2', 'LOGPERGUNTAS'];
     public const TIPO_DELETE = [''];
     public const TIPO_PUT = ['PARTIDASPERGUNTAS', 'LOGPERGUNTAS'];

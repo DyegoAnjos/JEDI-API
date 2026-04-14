@@ -57,6 +57,25 @@ class PartidasPerguntasService
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RANKING_BODY);
     }
 
+    public function serviceRankingEscola(){
+
+        $idPartida = $this->dados['idPartida'] ?? null;
+
+        if($idPartida !== null){
+            $resultado = $this->PartidasPerguntasRepository->repositoriRankingEscola($idPartida);
+
+            if(count($resultado) > 0){
+                return $resultado;
+            }
+
+            elseif (count($resultado) === 0){
+                throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RANKING_SEM_REGISTRO);
+            }
+        }
+
+        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RANKING_BODY);
+    }
+
     /**
      * @return array
      */

@@ -85,6 +85,72 @@ class PartidasPerguntasRepository
         }
     }
 
+    public function repositoriRankingEscola($idPartida)
+    {
+        try {
+            $jogadorAtual = null;
+
+            $sqlGeral = "SELECT idPartida, jogador, ". self::TABELA .". nome, MAX(pontuacao) AS pontuacao, 
+                    (SUM(qtdAcertos)/(SUM(qtdAcertos)+SUM(qtdErros)))*100 AS percentualAcertos, 
+                    MIN(tempoGasto) AS tempoGasto, COUNT(*) AS totalPartidas
+                    FROM " . self::TABELA . " 
+                    GROUP BY login
+                    UNION ALL
+                    SELECT idPartida, jogador, ". self::TABELA .". nome, pontuacao, 
+                    (SUM(qtdAcertos)/(SUM(qtdAcertos)+SUM(qtdErros)))*100 AS percentualAcertos, 
+                    tempoGasto, COUNT(*) AS totalPartidas FROM " . self::TABELA . " WHERE idPartida = :idPartida
+                    ORDER BY pontuacao DESC, percentualAcertos DESC, tempoGasto ASC;";
+
+            $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+            $stmt->bindValue(':idPartida', $idPartida, PDO::PARAM_INT);
+            $stmt->execute();
+            $rankingCompleto = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            $top10 = [];
+
+            // 2. Numerar TODOS e separar o que precisamos
+            foreach ($rankingCompleto as $index => $linha) {
+                $posicaoAtual = (int)($index + 1);
+                // Monta o objeto com a posição correta
+                $item = [
+                    "idPartida" => (int) $linha['idPartida'],
+                    "nome" => $linha['nome'],
+                    "jogador" => $linha['jogador'],
+                    "pontuacao" => $linha['pontuacao'],
+                    "percentualAcertos" => $linha['percentualAcertos'],
+                    "tempoGasto" => $linha['tempoGasto'],
+                    "totalPartidas" => $linha['totalPartidas'],
+                    "posicao" => $posicaoAtual
+                ];
+
+                if($item['idPartida'] == $idPartida){
+                    $jogadorAtual = $item;
+
+                    $sqlGeral = "SELECT autoAvaliacao, avaliacaoJogo FROM " . self::TABELA . " WHERE idPartida = :idPartida";
+                    $stmt = $this->MySQL->getDb()->prepare($sqlGeral);
+                    $stmt->bindValue(':idPartida', $idPartida, PDO::PARAM_INT);
+                    $stmt->execute();
+                    $avaliacao = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                    $jogadorAtual['autoAvaliacao'] = $avaliacao['autoAvaliacao'];
+                    $jogadorAtual['avaliacaoJogo'] = $avaliacao['avaliacaoJogo'];
+                }
+
+                // Se estiver entre os 10 primeiros, vai para o Top 10
+                if ($posicaoAtual <= 10) {
+                    $top10[] = $item;
+                }
+            }
+
+            $top10[] = $jogadorAtual;
+
+            return $top10;
+
+        } catch (\PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+    }
+
     /**
      * @param $id
      * @param $jogadorEmail

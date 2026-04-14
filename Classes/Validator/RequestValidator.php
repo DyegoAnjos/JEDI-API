@@ -2,6 +2,7 @@
 
 namespace Validator;
 
+use Service\CategoriaService;
 use Service\LogPerguntasService;
 use Service\Pergunta2Service;
 use Util\JsonUtil;
@@ -100,6 +101,13 @@ class RequestValidator
                         $retorno = $pergunta2->listarPergunta();
                     }
                 break;
+                case "CATEGORIA":
+                    $categoria = new CategoriaService($this->request);
+
+                    if($recurso === 'listarCategorias'){
+                        $retorno = $categoria->listarCategorias();
+                    }
+                break;
         }
 
         if (is_null($retorno)) {
@@ -125,6 +133,9 @@ class RequestValidator
                 if($recurso === 'autenticar'){
                     $retorno = $usuariosService->servicePegarUser();
                 }
+                elseif ($recurso === 'trocarSenha'){
+                    $retorno = $usuariosService->alterarSenhaService();
+                }
             break;
 
             case 'PARTIDASPERGUNTAS':
@@ -137,6 +148,10 @@ class RequestValidator
                 elseif ($recurso === 'salvarPartida'){
                     $retorno = $partidasPerguntasService->serviceSalvarPartida();
                 }
+
+//                elseif ($recurso === 'rankingEscola'){
+//                    $retorno = $partidasPerguntasService
+//                }
             break;
 
             case 'PERGUNTA2':

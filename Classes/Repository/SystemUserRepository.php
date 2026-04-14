@@ -49,4 +49,22 @@ class SystemUserRepository
             throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
         }
     }
+
+    public function alterarSenha($login ,$senhaAntiga, $senhaNova){
+        try {
+            $consulta = " UPDATE " . self::TABELA . " SET password = :senhaNova  WHERE login = :login AND password = :password ";
+            $stmt = $this->MySQL->getDb()->prepare($consulta);
+            $stmt->bindParam(':senhaNova', $senhaNova);
+            $stmt->bindParam(':login', $login);
+            $stmt->bindParam(':password', $senhaAntiga);
+            $stmt->execute();
+            $resultado = $stmt->rowCount();
+
+            return $resultado;
+
+        } catch (\PDOException $e) {
+            throw new \InvalidArgumentException("Erro SQL: " . $e->getMessage());
+        }
+
+    }
 }
