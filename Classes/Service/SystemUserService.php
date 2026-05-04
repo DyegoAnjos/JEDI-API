@@ -23,8 +23,7 @@ class SystemUserService
     {
         $login = $this->dados['login'] ?? null;
         $password = $this->dados['password'] ?? null;
-
-        if ($login !== null || $password !== null) {
+            if ($login !== null || $password !== null) {
             $password = md5($password);
 
             $resultado = $this->SystemUserRepository->repositoryPegarUser($login, $password);

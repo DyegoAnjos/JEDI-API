@@ -16,7 +16,6 @@ class RotasUtil
         $request['id'] = $urls[2] ?? null;
 
         $request['id'] = self::converteSimbolos($urls[2] ?? null);
-
         return $request;
     }
 

@@ -57,12 +57,12 @@ class PartidasPerguntasService
         throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_RANKING_BODY);
     }
 
-    public function serviceRankingEscola(){
+    public function serviceRankingTurma(){
 
-        $idPartida = $this->dados['idPartida'] ?? null;
+        $email = $this->dados['email'] ?? null;
 
-        if($idPartida !== null){
-            $resultado = $this->PartidasPerguntasRepository->repositoriRankingEscola($idPartida);
+        if($email !== null){
+            $resultado = $this->PartidasPerguntasRepository->repositoriRankingTurma($email);
 
             if(count($resultado) > 0){
                 return $resultado;
