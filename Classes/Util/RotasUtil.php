@@ -11,11 +11,12 @@ class RotasUtil
         $urls = self::getUrls();
 
         $request['metodo'] = $_SERVER['REQUEST_METHOD'];
-        $request['rota'] = strtoupper($urls[0]);
-        $request['recurso'] = $urls[1] ?? null;
-        $request['id'] = $urls[2] ?? null;
+        $request['rota'] = strtoupper($urls[1]);
+        $request['recurso'] = $urls[2] ?? null;
+        $request['id'] = $urls[3] ?? null;
 
-        $request['id'] = self::converteSimbolos($urls[2] ?? null);
+        json_encode($request);
+        $request['id'] = self::converteSimbolos($urls[3] ?? null);
         return $request;
     }
 

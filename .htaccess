@@ -1,4 +1,9 @@
 RewriteEngine On
+
+# Define a nova pasta base da URL
+RewriteBase /api/
+
+# Se não for um ficheiro real, manda para o index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]

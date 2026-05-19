@@ -31,14 +31,7 @@ class MySQL
     public function setDB()
     {
         try {
-            $dsn = 'mysql:host=' . HOST . ';dbname=' . BANCO . ';charset=utf8';
-            $options = [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_TIMEOUT            => 5, // seconds, evita longos bloqueios
-            ];
-
-            return new PDO($dsn, USER, SENHA, $options);
+            $this->db = new PDO("mysql:host=" . HOST . ";port=3306;dbname=" . BANCO, USER, SENHA);
         } catch (PDOException $exception) {
             // loga a exceção e propaga para o chamador poder tratar
             error_log('MySQL connection error: ' . $exception->getMessage());
