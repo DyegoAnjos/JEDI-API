@@ -1,116 +1,48 @@
 <?php
 
-namespace DB;
+namespace Classes\DB;
 
-use InvalidArgumentException;
 use PDO;
 use PDOException;
-use Util\ConstantesGenericasUtil;
-
-//Uma classe feita para guardar algumas requisições padrão do Banco
 
 class MySQL
 {
-    /**
-     * @var \PDO|null
-     */
-    private $db;
+    private $db = null;
 
-    /**
-     * MySQL constructor.
-     */
     public function __construct()
     {
-        $this->db = $this->setDB();
+        $this->conectar();
     }
 
-    /**
-     * @return PDO
-     */
-    //Função que seta oo banco de dados pegando o user e o host
-    public function setDB()
+    private function conectar()
     {
         try {
-            $this->db = new PDO("mysql:host=" . HOST . ";port=3306;dbname=" . BANCO, USER, SENHA);
-        } catch (PDOException $exception) {
-            // loga a exceção e propaga para o chamador poder tratar
-            error_log('MySQL connection error: ' . $exception->getMessage());
-            throw new PDOException($exception->getMessage());
+            // Configurações cruciais para depuração e codificação
+            $opcoes = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+            ];
+
+            // Tenta a conexão com o IP interno que você colocou no bootstrap
+            $this->db = new PDO("mysql:host=" . HOST . ";dbname=" . BANCO, USER, SENHA, $opcoes);
+
+        } catch (PDOException $e) {
+            // Força o PHP a parar tudo e te mostrar o erro REAL da conexão no Postman
+            header('Content-Type: application/json');
+            echo json_encode([
+                "erro" => "Falha ao conectar fisicamente no contêiner do banco",
+                "detalhes" => $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
         }
     }
 
-    /**
-     * @param $tabela
-     * @param $id
-     * @return string
-     */
-
-    //Função padrão de Deletar algo por um ID (Procurar um campo padrão para poder deletar em qualquer tabela)
-    public function delete($tabela, $id)
-    {
-        $consultaDelete = 'DELETE FROM ' . $tabela . ' WHERE id = :id';
-        if ($tabela && $id) {
-            $this->db->beginTransaction();
-            $stmt = $this->db->prepare($consultaDelete);
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-                $this->db->commit();
-                return ConstantesGenericasUtil::MSG_DELETADO_SUCESSO;
-            }
-            $this->db->rollBack();
-            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
-        }
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_GENERICO);
-    }
-
-    /**
-     * @param $tabela
-     * @return array
-     */
-
-    //Função que retorna tudo de uma Tabela
-    public function getAll($tabela)
-    {
-        if ($tabela) {
-            $consulta = 'SELECT * FROM ' . $tabela;
-            $stmt = $this->db->query($consulta);
-            $registros = $stmt->fetchAll($this->db::FETCH_ASSOC);
-            if (is_array($registros) && count($registros) > 0) {
-                return $registros;
-            }
-        }
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
-    }
-
-    /**
-     * @param $tabela
-     * @param $id
-     * @return mixed
-     */
-    //FUnção que pega tudo de uma tabela que tenha um ID passado
-    public function getOneByKey($tabela, $id)
-    {
-        if ($tabela && $id) {
-            $consulta = 'SELECT * FROM ' . $tabela . ' WHERE id = :id';
-            $stmt = $this->db->prepare($consulta);
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            $totalRegistros = $stmt->rowCount();
-            if ($totalRegistros === 1) {
-                return $stmt->fetch($this->db::FETCH_ASSOC);
-            }
-            throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_SEM_RETORNO);
-        }
-
-        throw new \InvalidArgumentException(ConstantesGenericasUtil::MSG_ERRO_ID_OBRIGATORIO);
-    }
-
-    /**
-     * @return object|PDO
-     */
     public function getDb()
     {
+        if ($this->db === null) {
+            $this->conectar();
+        }
         return $this->db;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+use Classes\DB\MySQL;
 //Inicia a configuração das URLs
 configuraCORS();
 
@@ -25,6 +26,7 @@ try {
 
 } catch (\Throwable $e) {
     // Captura qualquer erro de banco ou validação e retorna como JSON
+    echo json_encode($request);
     http_response_code(400);
     echo json_encode([
         'erro' => $e->getMessage()

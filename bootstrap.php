@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-define('HOST', '127.0.0.1');
+define('HOST', '172.19.0.6');
 define('BANCO', 'jedieduca');
 define('USER', 'root');
 define('SENHA', 'mys2Edu4Up@2025');

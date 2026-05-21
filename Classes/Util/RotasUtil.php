@@ -15,7 +15,6 @@ class RotasUtil
         $request['recurso'] = $urls[2] ?? null;
         $request['id'] = $urls[3] ?? null;
 
-        json_encode($request);
         $request['id'] = self::converteSimbolos($urls[3] ?? null);
         return $request;
     }
