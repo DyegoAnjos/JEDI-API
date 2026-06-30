@@ -4,15 +4,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
-define('HOST', getenv('HOST') ?: '');
-define('BANCO', getenv('BANCO') ?: '');
-define('USER', getenv('USER') ?: '');
-define('SENHA', getenv('SENHA') ?: '');
+//define('HOST', getenv('HOST') ?: '');
+//define('BANCO', getenv('BANCO') ?: '');
+//define('USER', getenv('USER') ?: '');
+//define('SENHA', getenv('SENHA') ?: '');
 
-// define('HOST', '172.19.0.6');
-// define('BANCO', 'jedieduca');
-// define('USER', 'root');
-// define('SENHA', 'mys2Edu4Up@2025');
+ define('HOST', '172.19.0.6');
+ define('BANCO', 'jedieduca');
+ define('USER', 'root');
+ define('SENHA', 'mys2Edu4Up@2025');
 
 define('DS', DIRECTORY_SEPARATOR);
 define('DIR_APP', __DIR__ . DS);
