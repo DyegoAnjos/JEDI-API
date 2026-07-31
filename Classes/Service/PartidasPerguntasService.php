@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Repository\GeneralisRepository;
 use Repository\PartidasPerguntasRepository;
 use Util\ConstantesGenericasUtil;
+use Util\JsonUtil;
 
 class PartidasPerguntasService
 {
@@ -14,6 +15,7 @@ class PartidasPerguntasService
      */
     private $dados;
     private $PartidasPerguntasRepository;
+
     public function __construct($dados = [])
     {
         $this->dados = $dados;
@@ -46,7 +48,7 @@ class PartidasPerguntasService
             $resultado = $this->PartidasPerguntasRepository->repositoriRanking($idPartida);
 
             if(count($resultado) > 0){
-                return $resultado;
+                return JsonUtil::formatarRanking($resultado);
             }
 
             elseif (count($resultado) === 0){
@@ -65,7 +67,7 @@ class PartidasPerguntasService
             $resultado = $this->PartidasPerguntasRepository->repositoriRankingTurma($email);
 
             if(count($resultado) > 0){
-                return $resultado;
+                return JsonUtil::formatarRanking($resultado);
             }
 
             elseif (count($resultado) === 0){
@@ -101,7 +103,22 @@ class PartidasPerguntasService
                     $this->PartidasPerguntasRepository->repositoryAtualizarAcertoseErros($resultado);
                 }
 
-                return ['id' => $resultado];
+                // Captura as jogadas enviadas no corpo para montar o retorno completo mapeado
+                $jogadas = $this->dados['jogadas'] ?? [];
+
+                // Estrutura os dados mestre da partida atual
+                $partidaMestre = [
+                    'id' => $resultado,
+                    'jogadorEmail' => $jogadorEmail,
+                    'dataHoraInicio' => $dataHoraInicio,
+                    'nome' => $nome,
+                    'idade' => $idade,
+                    'autoAvaliacao' => $autoAvaliacao,
+                    'avatar' => $avatar,
+                    'tempoGasto' => $tempoGasto
+                ];
+
+                return JsonUtil::formatarSalvarPartida($partidaMestre, $jogadas);
             }
 
             else{
